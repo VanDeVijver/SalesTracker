@@ -7,6 +7,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+// In production, use DATABASE_URL environment variable
+if (builder.Environment.IsProduction())
+{
+    connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+    // Handle Render's postgres:// format if using Render DB
+    if (!string.IsNullOrEmpty(connectionString) && connectionString.StartsWith("postgres://"))
+    {
+        // Convert postgres:// to Host=...;Database=... format
+        var uri = new Uri(connectionString);
+        connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={uri.UserInfo.Split(':')[0]};Password={uri.UserInfo.Split(':')[1]};SSL Mode=Require;Trust Server Certificate=true";
+    }
+}
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseNpgsql(connectionString, npgsqlOptions =>
@@ -50,6 +64,11 @@ else
 {
     app.UseDeveloperExceptionPage();
     app.UseCors();
+}
+
+if (!app.Environment.IsProduction())
+{
+    app.UseHttpsRedirection();
 }
 
 

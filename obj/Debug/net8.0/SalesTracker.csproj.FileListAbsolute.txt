@@ -107,3 +107,5 @@ C:\Users\seppe\source\repos\SalesTracker\SalesTracker\obj\Debug\net8.0\refint\Sa
 C:\Users\seppe\source\repos\SalesTracker\SalesTracker\obj\Debug\net8.0\SalesTracker.pdb
 C:\Users\seppe\source\repos\SalesTracker\SalesTracker\obj\Debug\net8.0\SalesTracker.genruntimeconfig.cache
 C:\Users\seppe\source\repos\SalesTracker\SalesTracker\obj\Debug\net8.0\ref\SalesTracker.dll
+C:\Users\seppe\source\repos\SalesTracker\SalesTracker\obj\Debug\net8.0\SalesTracker.sourcelink.json
+C:\Users\seppe\source\repos\SalesTracker\SalesTracker\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
