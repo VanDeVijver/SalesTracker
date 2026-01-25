@@ -1,0 +1,381 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\seppe\\source\\repos\\SalesTracker\\.filenesting.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:.filenesting.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker.core\\salestracker.core.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|solutionrelative:salestracker.core\\salestracker.core.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker.core\\data\\dataseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|solutionrelative:salestracker.core\\data\\dataseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker.core\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|solutionrelative:salestracker.core\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker.core\\entities\\project.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|solutionrelative:salestracker.core\\entities\\project.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker.core\\entities\\categorytarget.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|solutionrelative:salestracker.core\\entities\\categorytarget.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker.core\\entities\\systemsetting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|solutionrelative:salestracker.core\\entities\\systemsetting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker.core\\entities\\leadchannel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|solutionrelative:salestracker.core\\entities\\leadchannel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker.core\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|solutionrelative:salestracker.core\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker.core\\entities\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|solutionrelative:salestracker.core\\entities\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker.core\\models\\projectstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|solutionrelative:salestracker.core\\models\\projectstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker.core\\models\\clienttype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{766488B2-5B0F-4B03-8B3C-34CDC40D0FFA}|SalesTracker.Core\\SalesTracker.Core.csproj|solutionrelative:salestracker.core\\models\\clienttype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\SalesTracker.Web.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:SalesTracker\\SalesTracker.Web.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker\\views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|solutionrelative:salestracker\\views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker\\data\\applicationdbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|solutionrelative:salestracker\\data\\applicationdbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|solutionrelative:salestracker\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker\\appsettings.production.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|solutionrelative:salestracker\\appsettings.production.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|solutionrelative:salestracker\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|solutionrelative:salestracker\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|solutionrelative:salestracker\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|solutionrelative:salestracker\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|c:\\users\\seppe\\source\\repos\\salestracker\\salestracker\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{7F6D45C8-F3F9-4A4E-A596-D90C2F6B5E54}|SalesTracker\\SalesTracker.csproj|solutionrelative:salestracker\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": ".filenesting.json",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\.filenesting.json",
+              "RelativeDocumentMoniker": ".filenesting.json",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\.filenesting.json",
+              "RelativeToolTip": ".filenesting.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-01-25T14:33:55.567Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "_ViewStart.cshtml",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\Views\\_ViewStart.cshtml",
+              "RelativeDocumentMoniker": "SalesTracker\\Views\\_ViewStart.cshtml",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\Views\\_ViewStart.cshtml",
+              "RelativeToolTip": "SalesTracker\\Views\\_ViewStart.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-25T14:22:28.79Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DataSeeder.cs",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Data\\DataSeeder.cs",
+              "RelativeDocumentMoniker": "SalesTracker.Core\\Data\\DataSeeder.cs",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Data\\DataSeeder.cs",
+              "RelativeToolTip": "SalesTracker.Core\\Data\\DataSeeder.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABAAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-25T13:34:09.342Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "ApplicationDbContextFactory.cs",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\Data\\ApplicationDbContextFactory.cs",
+              "RelativeDocumentMoniker": "SalesTracker\\Data\\ApplicationDbContextFactory.cs",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\Data\\ApplicationDbContextFactory.cs",
+              "RelativeToolTip": "SalesTracker\\Data\\ApplicationDbContextFactory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-25T11:38:29.602Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "SalesTracker\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "SalesTracker\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-25T11:32:43.273Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "appsettings.Production.json",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\appsettings.Production.json",
+              "RelativeDocumentMoniker": "SalesTracker\\appsettings.Production.json",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\appsettings.Production.json",
+              "RelativeToolTip": "SalesTracker\\appsettings.Production.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-01-25T11:23:53.122Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "SalesTracker\\appsettings.Development.json",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\appsettings.Development.json",
+              "RelativeToolTip": "SalesTracker\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAADEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-01-25T11:22:56.943Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\Program.cs",
+              "RelativeDocumentMoniker": "SalesTracker\\Program.cs",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\Program.cs",
+              "RelativeToolTip": "SalesTracker\\Program.cs",
+              "ViewState": "AgIAACgAAAAAAAAAAAAAAEAAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-25T11:16:49.46Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "SalesTracker.Core\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "SalesTracker.Core\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAA6wDIAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-25T11:15:25.173Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "SystemSetting.cs",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Entities\\SystemSetting.cs",
+              "RelativeDocumentMoniker": "SalesTracker.Core\\Entities\\SystemSetting.cs",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Entities\\SystemSetting.cs",
+              "RelativeToolTip": "SalesTracker.Core\\Entities\\SystemSetting.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-25T11:14:59.974Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CategoryTarget.cs",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Entities\\CategoryTarget.cs",
+              "RelativeDocumentMoniker": "SalesTracker.Core\\Entities\\CategoryTarget.cs",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Entities\\CategoryTarget.cs",
+              "RelativeToolTip": "SalesTracker.Core\\Entities\\CategoryTarget.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-25T11:14:29.042Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "LeadChannel.cs",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Entities\\LeadChannel.cs",
+              "RelativeDocumentMoniker": "SalesTracker.Core\\Entities\\LeadChannel.cs",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Entities\\LeadChannel.cs",
+              "RelativeToolTip": "SalesTracker.Core\\Entities\\LeadChannel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-25T11:14:06.468Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "BaseEntity.cs",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Entities\\BaseEntity.cs",
+              "RelativeDocumentMoniker": "SalesTracker.Core\\Entities\\BaseEntity.cs",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Entities\\BaseEntity.cs",
+              "RelativeToolTip": "SalesTracker.Core\\Entities\\BaseEntity.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-25T11:13:23.981Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Category.cs",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Entities\\Category.cs",
+              "RelativeDocumentMoniker": "SalesTracker.Core\\Entities\\Category.cs",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Entities\\Category.cs",
+              "RelativeToolTip": "SalesTracker.Core\\Entities\\Category.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-25T11:13:03.779Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Project.cs",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Entities\\Project.cs",
+              "RelativeDocumentMoniker": "SalesTracker.Core\\Entities\\Project.cs",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Entities\\Project.cs",
+              "RelativeToolTip": "SalesTracker.Core\\Entities\\Project.cs",
+              "ViewState": "AgIAADIAAAAAAAAAAAAQwEAAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-25T11:10:58.376Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ProjectStatus.cs",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Models\\ProjectStatus.cs",
+              "RelativeDocumentMoniker": "SalesTracker.Core\\Models\\ProjectStatus.cs",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Models\\ProjectStatus.cs",
+              "RelativeToolTip": "SalesTracker.Core\\Models\\ProjectStatus.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-25T11:10:41.963Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ClientType.cs",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Models\\ClientType.cs",
+              "RelativeDocumentMoniker": "SalesTracker.Core\\Models\\ClientType.cs",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\Models\\ClientType.cs",
+              "RelativeToolTip": "SalesTracker.Core\\Models\\ClientType.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-25T11:10:31.897Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\appsettings.json",
+              "RelativeDocumentMoniker": "SalesTracker\\appsettings.json",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\appsettings.json",
+              "RelativeToolTip": "SalesTracker\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAABkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-01-25T11:06:56.9Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "SalesTracker.Core.csproj",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\SalesTracker.Core.csproj",
+              "RelativeDocumentMoniker": "SalesTracker.Core\\SalesTracker.Core.csproj",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker.Core\\SalesTracker.Core.csproj",
+              "RelativeToolTip": "SalesTracker.Core\\SalesTracker.Core.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-01-25T11:03:15.731Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "SalesTracker.Web.csproj",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\SalesTracker.Web.csproj",
+              "RelativeDocumentMoniker": "SalesTracker\\SalesTracker.Web.csproj",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\SalesTracker.Web.csproj",
+              "RelativeToolTip": "SalesTracker\\SalesTracker.Web.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-01-25T11:03:09.763Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "SalesTracker\\Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "SalesTracker\\Controllers\\HomeController.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-25T10:50:28.707Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "SalesTracker\\Views\\Home\\Index.cshtml",
+              "ToolTip": "C:\\Users\\seppe\\source\\repos\\SalesTracker\\SalesTracker\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "SalesTracker\\Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-25T10:35:17.721Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
