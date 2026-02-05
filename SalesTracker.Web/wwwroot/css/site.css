@@ -20,3 +20,140 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Status badges */
+.status-won {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #10b981;
+}
+
+.status-lost {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #ef4444;
+}
+
+.status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b;
+}
+
+/* Tab navigation */
+.tab-active {
+    border-bottom: 4px solid #facc15;
+    font-weight: bold;
+    color: #facc15;
+}
+
+/* Glass card effect */
+.glass-card {
+    background: white;
+    border-radius: 1.25rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1.25rem;
+}
+
+/* Form labels */
+label {
+    display: block;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+/* Table headers */
+th {
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+    th:hover {
+        background-color: #1e3a8a !important;
+    }
+
+/* Category badges */
+.cat-badge {
+    background-color: #f1f5f9;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    color: #1e293b;
+    display: inline-block;
+}
+
+/* Channel styling */
+.channel-style {
+    color: #2563eb;
+    font-weight: 800;
+    font-style: italic;
+}
+
+/* Amount styling */
+.amount-style {
+    font-weight: 900;
+    font-style: italic;
+    color: #0f172a;
+}
+
+/* Margin styling */
+.margin-style {
+    font-weight: 800;
+    color: #0f172a;
+}
+
+/* Tooltip */
+.info-tooltip {
+    position: relative;
+    cursor: help;
+}
+
+    .info-tooltip .tooltip-text {
+        visibility: hidden;
+        width: 320px;
+        background-color: #1e293b;
+        color: #fff;
+        text-align: left;
+        border-radius: 12px;
+        padding: 15px;
+        position: absolute;
+        z-index: 100;
+        bottom: 125%;
+        left: 0;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 10px;
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1.4;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        text-transform: none;
+    }
+
+    .info-tooltip:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+    }
+
+/* Utility classes for hidden elements */
+.hidden {
+    display: none !important;
+}
+
+/* Responsive spacing */
+.space-y-6 > * + * {
+    margin-top: 1.5rem;
+}
+
+.space-y-4 > * + * {
+    margin-top: 1rem;
+}
+
+.space-y-3 > * + * {
+    margin-top: 0.75rem;
+}

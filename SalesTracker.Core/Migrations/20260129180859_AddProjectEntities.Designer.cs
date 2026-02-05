@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SalesTracker.Core.Data;
@@ -11,9 +12,11 @@ using SalesTracker.Core.Data;
 namespace SalesTracker.Core.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260129180859_AddProjectEntities")]
+    partial class AddProjectEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,19 +53,19 @@ namespace SalesTracker.Core.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "70be922a-d6d2-49d5-ad67-749aaca4f82c",
+                            Id = "a8414a98-c271-4288-aaf2-58a3ec3c236e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "5f5edbcd-49f0-47a4-8f96-d84cdf5ef89f",
+                            Id = "438d97b2-7540-4cc5-8252-5cf77784ae86",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "487e8222-d068-4ba3-9733-60f1dfd717e6",
+                            Id = "a0202451-5e26-49b0-aa5a-c5bc2a71c384",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -157,8 +160,8 @@ namespace SalesTracker.Core.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "048d93b7-a0a3-4827-9044-3596b74548f6",
-                            RoleId = "70be922a-d6d2-49d5-ad67-749aaca4f82c"
+                            UserId = "5abd5139-23b0-4d5a-98bf-121a59bf2289",
+                            RoleId = "a8414a98-c271-4288-aaf2-58a3ec3c236e"
                         });
                 });
 
@@ -259,10 +262,10 @@ namespace SalesTracker.Core.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "048d93b7-a0a3-4827-9044-3596b74548f6",
+                            Id = "5abd5139-23b0-4d5a-98bf-121a59bf2289",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "61b16bc4-b806-49f1-a706-3735dc51593d",
-                            CreatedAt = new DateTime(2026, 2, 5, 12, 56, 4, 125, DateTimeKind.Utc).AddTicks(3990),
+                            ConcurrencyStamp = "16b65908-03ee-4eca-a81f-ed7821f33d6a",
+                            CreatedAt = new DateTime(2026, 1, 29, 18, 8, 58, 964, DateTimeKind.Utc).AddTicks(3802),
                             Email = "admin@salestracker.com",
                             EmailConfirmed = true,
                             FirstName = "System",
@@ -271,9 +274,9 @@ namespace SalesTracker.Core.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@SALESTRACKER.COM",
                             NormalizedUserName = "ADMIN@SALESTRACKER.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMdHp/4kFJvyNieqSYZ7AesVlbwPO8YI3K0UQ5EHeKxNaiPtcMiUUSDMfL6omj50aQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDA6n3Fk32gPg5efHYQTsI5IvUxnCbuzh0iQnKzosV0t/ULRQ4iSPRbfCh0os0pI7g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5dc40079-6188-4571-a46d-247acd88bdae",
+                            SecurityStamp = "a483ee7f-905d-4d21-bfe8-eb2d4a378de2",
                             TwoFactorEnabled = false,
                             UserName = "admin@salestracker.com"
                         });
@@ -405,35 +408,35 @@ namespace SalesTracker.Core.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 2, 5, 12, 56, 4, 252, DateTimeKind.Utc).AddTicks(5610),
+                            CreatedAt = new DateTime(2026, 1, 29, 18, 8, 59, 31, DateTimeKind.Utc).AddTicks(5727),
                             IsActive = true,
                             Name = "Eigen leads"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 2, 5, 12, 56, 4, 252, DateTimeKind.Utc).AddTicks(5619),
+                            CreatedAt = new DateTime(2026, 1, 29, 18, 8, 59, 31, DateTimeKind.Utc).AddTicks(5730),
                             IsActive = true,
                             Name = "Davy"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 2, 5, 12, 56, 4, 252, DateTimeKind.Utc).AddTicks(5621),
+                            CreatedAt = new DateTime(2026, 1, 29, 18, 8, 59, 31, DateTimeKind.Utc).AddTicks(5732),
                             IsActive = true,
                             Name = "SMA"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 2, 5, 12, 56, 4, 252, DateTimeKind.Utc).AddTicks(5622),
+                            CreatedAt = new DateTime(2026, 1, 29, 18, 8, 59, 31, DateTimeKind.Utc).AddTicks(5734),
                             IsActive = true,
                             Name = "SolarWatt"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2026, 2, 5, 12, 56, 4, 252, DateTimeKind.Utc).AddTicks(5624),
+                            CreatedAt = new DateTime(2026, 1, 29, 18, 8, 59, 31, DateTimeKind.Utc).AddTicks(5735),
                             IsActive = true,
                             Name = "Wienerberger"
                         });
@@ -453,8 +456,8 @@ namespace SalesTracker.Core.Migrations
                     b.Property<decimal?>("CafcaHours")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal?>("CafcaMarginPercentage")
-                        .HasColumnType("decimal(5,2)");
+                    b.Property<decimal?>("CafcaMargin")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
@@ -489,8 +492,8 @@ namespace SalesTracker.Core.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<decimal>("ManualMarginPercentage")
-                        .HasColumnType("decimal(5,2)");
+                    b.Property<decimal>("ManualMargin")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(2000)
@@ -553,7 +556,7 @@ namespace SalesTracker.Core.Migrations
                         {
                             Id = 1,
                             Key = "HourlyRate",
-                            UpdatedAt = new DateTime(2026, 2, 5, 12, 56, 4, 252, DateTimeKind.Utc).AddTicks(5729),
+                            UpdatedAt = new DateTime(2026, 1, 29, 18, 8, 59, 31, DateTimeKind.Utc).AddTicks(5773),
                             Value = "50"
                         });
                 });

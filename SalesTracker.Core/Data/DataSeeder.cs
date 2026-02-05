@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SalesTracker.Core.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace SalesTracker.Core.Data
 {
     public static class DataSeeder
     {
+
+
         public static void Seed(ModelBuilder modelBuilder)
         {
             seedCategories(modelBuilder);
@@ -17,7 +20,7 @@ namespace SalesTracker.Core.Data
             seedSystemSettings(modelBuilder);
         }
 
-    
+        
 
         private static void seedCategories(ModelBuilder modelBuilder)
         {

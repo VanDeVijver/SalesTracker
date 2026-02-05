@@ -11,7 +11,6 @@ namespace SalesTracker.Core.Entities
 {
     public class Project : BaseEntity
     {
-
         [Required]
         public DateTime Date { get; set; }
 
@@ -25,7 +24,7 @@ namespace SalesTracker.Core.Entities
         public int CategoryId { get; set; }
 
         [ForeignKey(nameof(CategoryId))]
-        public  Category Category { get; set; } = null!;
+        public Category Category { get; set; } = null!;
 
         [Required]
         public int LeadChannelId { get; set; }
@@ -42,15 +41,17 @@ namespace SalesTracker.Core.Entities
         [Column(TypeName = "decimal(18,2)")]
         public decimal Purchase { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal ManualMargin { get; set; }
+        // Changed to percentage (0-100)
+        [Column(TypeName = "decimal(5,2)")]
+        public decimal ManualMarginPercentage { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Hours { get; set; }
 
         // Financial - Actual (Cafca/Nacalculatie)
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal? CafcaMargin { get; set; }
+        // Changed to percentage (0-100)
+        [Column(TypeName = "decimal(5,2)")]
+        public decimal? CafcaMarginPercentage { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal? CafcaHours { get; set; }
@@ -70,5 +71,14 @@ namespace SalesTracker.Core.Entities
         // Audit
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+
+        // Calculated properties
+        [NotMapped]
+        public decimal ManualMarginAmount => Amount * (ManualMarginPercentage / 100);
+
+        [NotMapped]
+        public decimal? CafcaMarginAmount => FinalInvoiceAmount.HasValue && CafcaMarginPercentage.HasValue
+            ? FinalInvoiceAmount.Value * (CafcaMarginPercentage.Value / 100)
+            : null;
     }
 }

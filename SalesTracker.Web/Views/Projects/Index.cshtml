@@ -1,0 +1,197 @@
+﻿@model List<SalesTracker.Web.ViewModels.ProjectViewModel>
+    @{
+    ViewData["Title"] = "Projects";
+    }
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-4xl font-black text-blue-900 uppercase">Projects</h1>
+                <p class="text-slate-600 mt-2">Manage all your sales projects</p>
+            </div>
+            <div class="flex gap-4">
+                <select id="yearFilter" class="px-4 py-2 border-2 border-slate-200 rounded-xl font-bold" onchange="filterByYear(this.value)">
+                    @foreach (var year in ViewBag.Years)
+                    {
+                    <option value="@year" selected="@(year == ViewBag.CurrentYear)">@year</option>
+                    }
+                </select>
+                <a asp-action="Create" class="bg-blue-900 text-white px-6 py-3 rounded-xl font-black uppercase hover:bg-blue-800 transition">
+                    + New Project
+                </a>
+            </div>
+        </div>
+
+        <!-- Actions Bar -->
+        <div class="bg-white rounded-2xl shadow-lg p-4 mb-6 flex justify-between items-center">
+            <div class="flex gap-4">
+                <button onclick="showView('table')" id="btn-table" class="px-4 py-2 rounded-lg font-bold bg-blue-900 text-white">
+                    📋 Table
+                </button>
+                <button onclick="showView('kanban')" id="btn-kanban" class="px-4 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-100">
+                    📊 Kanban
+                </button>
+            </div>
+            <div class="flex gap-4">
+                <a asp-action="ExportCsv" asp-route-year="@ViewBag.CurrentYear" class="px-4 py-2 rounded-lg font-bold text-green-600 hover:bg-green-50">
+                    📥 Export CSV
+                </a>
+                <button onclick="document.getElementById('importFile').click()" class="px-4 py-2 rounded-lg font-bold text-purple-600 hover:bg-purple-50">
+                    📤 Import CSV
+                </button>
+                <form asp-action="ImportCsv" method="post" enctype="multipart/form-data" id="importForm" class="hidden">
+                    <input type="file" id="importFile" name="file" accept=".csv" onchange="this.form.submit()" />
+                </form>
+            </div>
+        </div>
+
+        <!-- Table View -->
+        <div id="tableView" class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            <th class="text-left py-4 px-4 font-black text-slate-700 uppercase text-xs">Date</th>
+                            <th class="text-left py-4 px-4 font-black text-slate-700 uppercase text-xs">Customer</th>
+                            <th class="text-left py-4 px-4 font-black text-slate-700 uppercase text-xs">Category</th>
+                            <th class="text-left py-4 px-4 font-black text-slate-700 uppercase text-xs">Lead Channel</th>
+                            <th class="text-left py-4 px-4 font-black text-slate-700 uppercase text-xs">Status</th>
+                            <th class="text-right py-4 px-4 font-black text-slate-700 uppercase text-xs">Amount</th>
+                            <th class="text-center py-4 px-4 font-black text-slate-700 uppercase text-xs">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var project in Model)
+                        {
+                        var statusColor = project.Status switch
+                        {
+                        SalesTracker.Core.Models.ProjectStatus.Pending => "yellow",
+                        SalesTracker.Core.Models.ProjectStatus.Won => "green",
+                        SalesTracker.Core.Models.ProjectStatus.Lost => "red",
+                        _ => "gray"
+                        };
+                        <tr class="border-b border-slate-100 hover:bg-slate-50">
+                            <td class="py-4 px-4 text-sm">@project.Date.ToString("dd/MM/yyyy")</td>
+                            <td class="py-4 px-4 font-bold">@project.Customer</td>
+                            <td class="py-4 px-4 text-sm">@project.CategoryName</td>
+                            <td class="py-4 px-4 text-sm">@project.LeadChannelName</td>
+                            <td class="py-4 px-4">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-@(statusColor)-100 text-@(statusColor)-700">
+                                    @project.Status
+                                </span>
+                            </td>
+                            <td class="py-4 px-4 text-right font-bold">€@project.Amount.ToString("N0")</td>
+                            <td class="py-4 px-4">
+                                <div class="flex justify-center gap-2">
+                                    <a asp-action="Edit" asp-route-id="@project.Id" class="text-blue-600 hover:text-blue-800 font-bold">Edit</a>
+                                    <form asp-action="Delete" asp-route-id="@project.Id" method="post" class="inline" onsubmit="return confirm('Are you sure you want to delete this project?')">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="text-red-600 hover:text-red-800 font-bold">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Kanban View -->
+        <div id="kanbanView" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Pending Column -->
+                <div class="bg-yellow-50 rounded-2xl p-4">
+                    <h3 class="text-xl font-black text-yellow-700 uppercase mb-4">Pending</h3>
+                    <div class="space-y-4">
+                        @foreach (var project in Model.Where(p => p.Status == SalesTracker.Core.Models.ProjectStatus.Pending))
+                        {
+                        <div class="bg-white rounded-xl shadow p-4">
+                            <div class="font-bold text-slate-900 mb-2">@project.Customer</div>
+                            <div class="text-sm text-slate-600 mb-2">@project.CategoryName</div>
+                            <div class="text-lg font-black text-blue-900">€@project.Amount.ToString("N0")</div>
+                            <div class="text-xs text-slate-500 mt-2">@project.Date.ToString("dd/MM/yyyy")</div>
+                            <div class="flex gap-2 mt-3">
+                                <a asp-action="Edit" asp-route-id="@project.Id" class="text-xs text-blue-600 hover:underline">Edit</a>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Won Column -->
+                <div class="bg-green-50 rounded-2xl p-4">
+                    <h3 class="text-xl font-black text-green-700 uppercase mb-4">Won</h3>
+                    <div class="space-y-4">
+                        @foreach (var project in Model.Where(p => p.Status == SalesTracker.Core.Models.ProjectStatus.Won))
+                        {
+                        <div class="bg-white rounded-xl shadow p-4">
+                            <div class="font-bold text-slate-900 mb-2">@project.Customer</div>
+                            <div class="text-sm text-slate-600 mb-2">@project.CategoryName</div>
+                            <div class="text-lg font-black text-green-600">€@((project.FinalInvoiceAmount ?? project.Amount).ToString("N0"))</div>
+                            <div class="text-xs text-slate-500 mt-2">@project.Date.ToString("dd/MM/yyyy")</div>
+                            <div class="flex gap-2 mt-3">
+                                <a asp-action="Edit" asp-route-id="@project.Id" class="text-xs text-blue-600 hover:underline">Edit</a>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Lost Column -->
+                <div class="bg-red-50 rounded-2xl p-4">
+                    <h3 class="text-xl font-black text-red-700 uppercase mb-4">Lost</h3>
+                    <div class="space-y-4">
+                        @foreach (var project in Model.Where(p => p.Status == SalesTracker.Core.Models.ProjectStatus.Lost))
+                        {
+                        <div class="bg-white rounded-xl shadow p-4">
+                            <div class="font-bold text-slate-900 mb-2">@project.Customer</div>
+                            <div class="text-sm text-slate-600 mb-2">@project.CategoryName</div>
+                            <div class="text-lg font-black text-red-600">€@project.Amount.ToString("N0")</div>
+                            <div class="text-xs text-slate-500 mt-2">@project.Date.ToString("dd/MM/yyyy")</div>
+                            @if (!string.IsNullOrEmpty(project.LostReason))
+                            {
+                            <div class="text-xs text-red-600 mt-2">Reason: @project.LostReason</div>
+                            }
+                            <div class="flex gap-2 mt-3">
+                                <a asp-action="Edit" asp-route-id="@project.Id" class="text-xs text-blue-600 hover:underline">Edit</a>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+    <script>
+        function filterByYear(year) {
+            window.location.href = `/Projects?year=${year}`;
+        }
+
+        function showView(view) {
+            const tableView = document.getElementById('tableView');
+            const kanbanView = document.getElementById('kanbanView');
+            const btnTable = document.getElementById('btn-table');
+            const btnKanban = document.getElementById('btn-kanban');
+
+            if (view === 'table') {
+                tableView.classList.remove('hidden');
+                kanbanView.classList.add('hidden');
+                btnTable.classList.add('bg-blue-900', 'text-white');
+                btnTable.classList.remove('text-slate-700', 'hover:bg-slate-100');
+                btnKanban.classList.remove('bg-blue-900', 'text-white');
+                btnKanban.classList.add('text-slate-700', 'hover:bg-slate-100');
+            } else {
+                tableView.classList.add('hidden');
+                kanbanView.classList.remove('hidden');
+                btnKanban.classList.add('bg-blue-900', 'text-white');
+                btnKanban.classList.remove('text-slate-700', 'hover:bg-slate-100');
+                btnTable.classList.remove('bg-blue-900', 'text-white');
+                btnTable.classList.add('text-slate-700', 'hover:bg-slate-100');
+            }
+        }
+    </script>
+    }
