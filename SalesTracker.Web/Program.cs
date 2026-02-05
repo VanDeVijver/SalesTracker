@@ -7,48 +7,92 @@ using SalesTracker.Core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Debug: Check environment variables at startup
+Console.WriteLine("=== ENVIRONMENT CHECK ===");
+Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {builder.Environment.EnvironmentName}");
+Console.WriteLine($"DATABASE_URL exists: {!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DATABASE_URL"))}");
+
+var dbUrlCheck = Environment.GetEnvironmentVariable("DATABASE_URL");
+if (!string.IsNullOrEmpty(dbUrlCheck))
+{
+    Console.WriteLine($"DATABASE_URL format: {(dbUrlCheck.StartsWith("postgresql://") || dbUrlCheck.StartsWith("postgres://") ? "PostgreSQL URL" : "Connection String")}");
+    Console.WriteLine($"DATABASE_URL length: {dbUrlCheck.Length} characters");
+}
+Console.WriteLine("========================");
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Get connection string
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// Configure database connection
+string? connectionString = null;
 
-// In production, use DATABASE_URL environment variable (for Render/Neon)
+// In production, prioritize DATABASE_URL environment variable
 if (builder.Environment.IsProduction())
 {
     var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
     if (!string.IsNullOrEmpty(databaseUrl))
     {
-        // Parse the DATABASE_URL (works for both Render and Neon format)
+        Console.WriteLine("Using DATABASE_URL from environment");
+
+        // Convert DATABASE_URL to connection string format if needed
         if (databaseUrl.StartsWith("postgres://") || databaseUrl.StartsWith("postgresql://"))
         {
-            var uri = new Uri(databaseUrl);
-            var host = uri.Host;
-            var port = uri.Port > 0 ? uri.Port : 5432;
-            var database = uri.AbsolutePath.TrimStart('/');
-            var userInfo = uri.UserInfo.Split(':');
-            var username = userInfo[0];
-            var password = userInfo.Length > 1 ? userInfo[1] : "";
+            try
+            {
+                // Parse the URL format
+                var uri = new Uri(databaseUrl);
+                var userInfo = uri.UserInfo.Split(':');
+                var username = userInfo[0];
+                var password = userInfo.Length > 1 ? userInfo[1] : "";
 
-            // Neon requires SSL Mode=Require
-            connectionString = $"Host={host};Port={port};Database={database};Username={username};Password={password};SSL Mode=Require;Trust Server Certificate=true";
+                connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={username};Password={password};SSL Mode=Require;Trust Server Certificate=true";
+
+                Console.WriteLine($"✓ Parsed DATABASE_URL successfully");
+                Console.WriteLine($"Host: {uri.Host}");
+                Console.WriteLine($"Port: {uri.Port}");
+                Console.WriteLine($"Database: {uri.AbsolutePath.TrimStart('/')}");
+                Console.WriteLine($"Username: {username}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Failed to parse DATABASE_URL: {ex.Message}");
+            }
         }
         else
         {
+            // Use as-is if already in connection string format
             connectionString = databaseUrl;
+            Console.WriteLine("Using DATABASE_URL as connection string format");
         }
+    }
+    else
+    {
+        Console.WriteLine("⚠️ DATABASE_URL environment variable not found");
     }
 }
 
-var logger = LoggerFactory.Create(config => config.AddConsole()).CreateLogger("Program");
-logger.LogInformation($"Environment: {builder.Environment.EnvironmentName}");
-logger.LogInformation($"Connection string configured: {!string.IsNullOrEmpty(connectionString)}");
+// Fallback to appsettings.json for development
+if (string.IsNullOrEmpty(connectionString))
+{
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    Console.WriteLine($"Using connection string from appsettings: {!string.IsNullOrEmpty(connectionString)}");
+}
+
+// Log connection string info (masked for security)
+Console.WriteLine($"Connection string configured: {!string.IsNullOrEmpty(connectionString)}");
+if (!string.IsNullOrEmpty(connectionString))
+{
+    var maskedConnection = connectionString.Length > 50
+        ? connectionString.Substring(0, 50) + "..."
+        : connectionString;
+    Console.WriteLine($"Connection format: {maskedConnection}");
+}
 
 if (string.IsNullOrEmpty(connectionString))
 {
-    logger.LogError("No connection string found!");
-    throw new InvalidOperationException("Database connection string is not configured");
+    Console.WriteLine("❌ CRITICAL: No connection string found!");
+    throw new InvalidOperationException("Database connection string is not configured. Set DATABASE_URL environment variable or configure DefaultConnection in appsettings.json");
 }
 
 // Configure Npgsql to handle DateTime as UTC
@@ -142,20 +186,31 @@ using (var scope = app.Services.CreateScope())
         appLogger.LogInformation("Starting database migration...");
         var db = services.GetRequiredService<ApplicationDbContext>();
 
-        // Test connection
+        // Test connection with detailed error logging
         appLogger.LogInformation("Testing database connection...");
+        appLogger.LogInformation($"Provider: {db.Database.ProviderName}");
+
         var canConnect = await db.Database.CanConnectAsync();
 
         if (!canConnect)
         {
-            appLogger.LogError("Cannot connect to database");
-            throw new Exception("Database connection failed");
+            appLogger.LogError("❌ Cannot connect to database - CanConnectAsync returned false");
+            throw new Exception("Database connection test failed");
         }
 
         appLogger.LogInformation("✓ Database connection successful");
 
         // Apply migrations
         appLogger.LogInformation("Applying migrations...");
+
+        var pendingMigrations = await db.Database.GetPendingMigrationsAsync();
+        appLogger.LogInformation($"Pending migrations: {pendingMigrations.Count()}");
+
+        if (pendingMigrations.Any())
+        {
+            appLogger.LogInformation($"Migrations to apply: {string.Join(", ", pendingMigrations)}");
+        }
+
         await db.Database.MigrateAsync();
         appLogger.LogInformation("✓ Database migrations applied successfully");
 
@@ -168,12 +223,27 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        appLogger.LogError(ex, "❌ An error occurred while migrating or seeding the database");
+        appLogger.LogError("❌ Database operation failed");
+        appLogger.LogError($"Error Type: {ex.GetType().Name}");
+        appLogger.LogError($"Error Message: {ex.Message}");
+
+        if (ex.InnerException != null)
+        {
+            appLogger.LogError($"Inner Exception Type: {ex.InnerException.GetType().Name}");
+            appLogger.LogError($"Inner Exception Message: {ex.InnerException.Message}");
+        }
+
+        appLogger.LogError($"Stack Trace: {ex.StackTrace}");
 
         // In production, log but don't crash - let health checks handle it
         if (app.Environment.IsDevelopment())
         {
             throw;
+        }
+        else
+        {
+            appLogger.LogWarning("⚠️ Application will start without database connection");
+            appLogger.LogWarning("⚠️ Database operations will fail until connection is fixed");
         }
     }
 }
@@ -228,6 +298,7 @@ app.MapGet("/health/detailed", async (ApplicationDbContext context) =>
         {
             status = "unhealthy",
             error = ex.Message,
+            innerError = ex.InnerException?.Message,
             timestamp = DateTime.UtcNow
         });
     }
