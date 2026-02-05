@@ -1,20 +1,14 @@
-databases:
-  - name: salestracker-db
-    databaseName: salestracker
-    user: salestracker
-    region: frankfurt
-
 services:
   - type: web
     name: salestracker-web
     runtime: docker
+    plan: free
+    region: frankfurt
     dockerfilePath: ./Dockerfile
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
       - key: ASPNETCORE_URLS
         value: http://+:80
-      - key: ConnectionStrings__DefaultConnection
-        fromDatabase:
-          name: salestracker-db
-          property: connectionString
+      - key: DATABASE_URL
+        value: 'postgresql://neondb_owner:npg_uFCwv5dmcTy1@ep-steep-bird-abapelnz-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require'

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SalesTracker.Core.Data;
@@ -11,9 +12,11 @@ using SalesTracker.Core.Data;
 namespace SalesTracker.Core.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260205142642_AddRolesSeeding")]
+    partial class AddRolesSeeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,21 +54,21 @@ namespace SalesTracker.Core.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "733ee75f-c07a-4ccf-b97b-a0c4735ae164",
+                            ConcurrencyStamp = "bd3e8890-0eda-4f5a-ae7a-090f48ae89a2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "fe8f08d2-0d41-4f60-a24b-4d9124d6c254",
+                            ConcurrencyStamp = "b18fb81f-c318-402a-8ffd-c99741da77b8",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
                             Id = "3",
-                            ConcurrencyStamp = "b700c13f-8306-469e-bf08-4388774e99bb",
+                            ConcurrencyStamp = "8ed8d122-aef8-4d23-b774-018d43c31945",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -271,9 +274,6 @@ namespace SalesTracker.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("Categories");
 
                     b.HasData(
@@ -332,6 +332,9 @@ namespace SalesTracker.Core.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("CategoryId1")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -345,6 +348,8 @@ namespace SalesTracker.Core.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId1");
 
                     b.HasIndex("CategoryId", "Year")
                         .IsUnique();
@@ -373,44 +378,41 @@ namespace SalesTracker.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("LeadChannels");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 2, 5, 14, 32, 32, 300, DateTimeKind.Utc).AddTicks(4202),
+                            CreatedAt = new DateTime(2026, 2, 5, 14, 26, 41, 575, DateTimeKind.Utc).AddTicks(9718),
                             IsActive = true,
                             Name = "Eigen leads"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 2, 5, 14, 32, 32, 300, DateTimeKind.Utc).AddTicks(4206),
+                            CreatedAt = new DateTime(2026, 2, 5, 14, 26, 41, 575, DateTimeKind.Utc).AddTicks(9721),
                             IsActive = true,
                             Name = "Davy"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 2, 5, 14, 32, 32, 300, DateTimeKind.Utc).AddTicks(4207),
+                            CreatedAt = new DateTime(2026, 2, 5, 14, 26, 41, 575, DateTimeKind.Utc).AddTicks(9723),
                             IsActive = true,
                             Name = "SMA"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 2, 5, 14, 32, 32, 300, DateTimeKind.Utc).AddTicks(4209),
+                            CreatedAt = new DateTime(2026, 2, 5, 14, 26, 41, 575, DateTimeKind.Utc).AddTicks(9724),
                             IsActive = true,
                             Name = "SolarWatt"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2026, 2, 5, 14, 32, 32, 300, DateTimeKind.Utc).AddTicks(4210),
+                            CreatedAt = new DateTime(2026, 2, 5, 14, 26, 41, 575, DateTimeKind.Utc).AddTicks(9725),
                             IsActive = true,
                             Name = "Wienerberger"
                         });
@@ -434,6 +436,9 @@ namespace SalesTracker.Core.Migrations
                         .HasColumnType("decimal(5,2)");
 
                     b.Property<int>("CategoryId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("CategoryId1")
                         .HasColumnType("integer");
 
                     b.Property<int>("ClientType")
@@ -462,6 +467,9 @@ namespace SalesTracker.Core.Migrations
                     b.Property<int>("LeadChannelId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("LeadChannelId1")
+                        .HasColumnType("integer");
+
                     b.Property<string>("LostReason")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -486,9 +494,13 @@ namespace SalesTracker.Core.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("CategoryId1");
+
                     b.HasIndex("Date");
 
                     b.HasIndex("LeadChannelId");
+
+                    b.HasIndex("LeadChannelId1");
 
                     b.HasIndex("Status");
 
@@ -528,7 +540,7 @@ namespace SalesTracker.Core.Migrations
                         {
                             Id = 1,
                             Key = "HourlyRate",
-                            UpdatedAt = new DateTime(2026, 2, 5, 14, 32, 32, 300, DateTimeKind.Utc).AddTicks(4308),
+                            UpdatedAt = new DateTime(2026, 2, 5, 14, 26, 41, 575, DateTimeKind.Utc).AddTicks(9754),
                             Value = "50"
                         });
                 });
@@ -587,10 +599,14 @@ namespace SalesTracker.Core.Migrations
             modelBuilder.Entity("SalesTracker.Core.Entities.CategoryTarget", b =>
                 {
                     b.HasOne("SalesTracker.Core.Entities.Category", "Category")
-                        .WithMany("Targets")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("SalesTracker.Core.Entities.Category", null)
+                        .WithMany("Targets")
+                        .HasForeignKey("CategoryId1");
 
                     b.Navigation("Category");
                 });
@@ -598,16 +614,24 @@ namespace SalesTracker.Core.Migrations
             modelBuilder.Entity("SalesTracker.Core.Entities.Project", b =>
                 {
                     b.HasOne("SalesTracker.Core.Entities.Category", "Category")
-                        .WithMany("Projects")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SalesTracker.Core.Entities.LeadChannel", "LeadChannel")
+                    b.HasOne("SalesTracker.Core.Entities.Category", null)
                         .WithMany("Projects")
+                        .HasForeignKey("CategoryId1");
+
+                    b.HasOne("SalesTracker.Core.Entities.LeadChannel", "LeadChannel")
+                        .WithMany()
                         .HasForeignKey("LeadChannelId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SalesTracker.Core.Entities.LeadChannel", null)
+                        .WithMany("Projects")
+                        .HasForeignKey("LeadChannelId1");
 
                     b.Navigation("Category");
 

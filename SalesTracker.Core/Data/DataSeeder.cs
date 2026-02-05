@@ -2,25 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using SalesTracker.Core.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SalesTracker.Core.Data
 {
     public static class DataSeeder
     {
-
-
         public static void Seed(ModelBuilder modelBuilder)
         {
             seedCategories(modelBuilder);
-            seddLeadChannels(modelBuilder);
+            seedLeadChannels(modelBuilder);
             seedSystemSettings(modelBuilder);
+            seedRoles(modelBuilder);
         }
-
-        
 
         private static void seedCategories(ModelBuilder modelBuilder)
         {
@@ -35,7 +28,7 @@ namespace SalesTracker.Core.Data
            );
         }
 
-        private static void seddLeadChannels(ModelBuilder modelBuilder)
+        private static void seedLeadChannels(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<LeadChannel>().HasData(
                 new LeadChannel { Id = 1, Name = "Eigen leads", IsActive = true, CreatedAt = DateTime.UtcNow },
@@ -52,5 +45,66 @@ namespace SalesTracker.Core.Data
                 new SystemSetting { Id = 1, Key = "HourlyRate", Value = "50", UpdatedAt = DateTime.UtcNow });
         }
 
+        private static void seedRoles(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole
+                {
+                    Id = "1",
+                    Name = "Admin",
+                    NormalizedName = "ADMIN",
+                    ConcurrencyStamp = Guid.NewGuid().ToString()
+                },
+                new IdentityRole
+                {
+                    Id = "2",
+                    Name = "Manager",
+                    NormalizedName = "MANAGER",
+                    ConcurrencyStamp = Guid.NewGuid().ToString()
+                },
+                new IdentityRole
+                {
+                    Id = "3",
+                    Name = "User",
+                    NormalizedName = "USER",
+                    ConcurrencyStamp = Guid.NewGuid().ToString()
+                }
+            );
+        }
+
+        public static async Task SeedAdminUser(
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager)
+        {
+            var roles = new[] { "Admin", "Manager", "User" };
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+
+            var adminEmail = "admin@salestracker.com";
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+            if (adminUser == null)
+            {
+                adminUser = new ApplicationUser
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail,
+                    EmailConfirmed = true,
+                    FirstName = "Admin",
+                    LastName = "User"
+                };
+
+                var result = await userManager.CreateAsync(adminUser, "Admin@123");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
+                }
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SalesTracker.Core.Data;
 using SalesTracker.Core.Entities;
@@ -13,21 +13,14 @@ builder.Services.AddControllersWithViews();
 // Get connection string
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-if (string.IsNullOrEmpty(connectionString))
-{
-    throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-}
-
-Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
-Console.WriteLine($"Connection string configured: {!string.IsNullOrEmpty(connectionString)}");
-
-// In production, use DATABASE_URL environment variable
+// In production, use DATABASE_URL environment variable (for Render/Neon)
 if (builder.Environment.IsProduction())
 {
     var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
     if (!string.IsNullOrEmpty(databaseUrl))
     {
+        // Parse the DATABASE_URL (works for both Render and Neon format)
         if (databaseUrl.StartsWith("postgres://") || databaseUrl.StartsWith("postgresql://"))
         {
             var uri = new Uri(databaseUrl);
@@ -38,6 +31,7 @@ if (builder.Environment.IsProduction())
             var username = userInfo[0];
             var password = userInfo.Length > 1 ? userInfo[1] : "";
 
+            // Neon requires SSL Mode=Require
             connectionString = $"Host={host};Port={port};Database={database};Username={username};Password={password};SSL Mode=Require;Trust Server Certificate=true";
         }
         else
@@ -48,7 +42,14 @@ if (builder.Environment.IsProduction())
 }
 
 var logger = LoggerFactory.Create(config => config.AddConsole()).CreateLogger("Program");
-logger.LogInformation($"Connecting to database in {builder.Environment.EnvironmentName} environment");
+logger.LogInformation($"Environment: {builder.Environment.EnvironmentName}");
+logger.LogInformation($"Connection string configured: {!string.IsNullOrEmpty(connectionString)}");
+
+if (string.IsNullOrEmpty(connectionString))
+{
+    logger.LogError("No connection string found!");
+    throw new InvalidOperationException("Database connection string is not configured");
+}
 
 // Configure Npgsql to handle DateTime as UTC
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -130,6 +131,53 @@ if (builder.Environment.IsDevelopment())
 
 var app = builder.Build();
 
+// Auto-migrate database and seed data on startup
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var appLogger = services.GetRequiredService<ILogger<Program>>();
+
+    try
+    {
+        appLogger.LogInformation("Starting database migration...");
+        var db = services.GetRequiredService<ApplicationDbContext>();
+
+        // Test connection
+        appLogger.LogInformation("Testing database connection...");
+        var canConnect = await db.Database.CanConnectAsync();
+
+        if (!canConnect)
+        {
+            appLogger.LogError("Cannot connect to database");
+            throw new Exception("Database connection failed");
+        }
+
+        appLogger.LogInformation("✓ Database connection successful");
+
+        // Apply migrations
+        appLogger.LogInformation("Applying migrations...");
+        await db.Database.MigrateAsync();
+        appLogger.LogInformation("✓ Database migrations applied successfully");
+
+        // Seed admin user and roles
+        appLogger.LogInformation("Seeding admin user and roles...");
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        await DataSeeder.SeedAdminUser(userManager, roleManager);
+        appLogger.LogInformation("✓ Admin user and roles seeded successfully");
+    }
+    catch (Exception ex)
+    {
+        appLogger.LogError(ex, "❌ An error occurred while migrating or seeding the database");
+
+        // In production, log but don't crash - let health checks handle it
+        if (app.Environment.IsDevelopment())
+        {
+            throw;
+        }
+    }
+}
+
 // Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
@@ -152,49 +200,41 @@ app.UseAuthorization();
 // Add health check endpoint
 app.MapHealthChecks("/health");
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-// Auto-migrate database and seed data on startup
-using (var scope = app.Services.CreateScope())
+// Add detailed health endpoint for debugging
+app.MapGet("/health/detailed", async (ApplicationDbContext context) =>
 {
-    var services = scope.ServiceProvider;
-    var appLogger = services.GetRequiredService<ILogger<Program>>();
-
     try
     {
-        appLogger.LogInformation("Applying database migrations...");
-        var db = services.GetRequiredService<ApplicationDbContext>();
+        var canConnect = await context.Database.CanConnectAsync();
+        var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+        var appliedMigrations = await context.Database.GetAppliedMigrationsAsync();
 
-        var canConnect = await db.Database.CanConnectAsync();
-        if (!canConnect)
+        return Results.Ok(new
         {
-            appLogger.LogError("Cannot connect to database");
-            throw new Exception("Database connection failed");
-        }
-
-        db.Database.Migrate();
-        appLogger.LogInformation("Database migrations applied successfully");
-
-        // Ensure roles exist
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-        var roles = new[] { "Admin", "Manager", "User" };
-
-        foreach (var role in roles)
-        {
-            if (!await roleManager.RoleExistsAsync(role))
+            status = canConnect ? "healthy" : "unhealthy",
+            database = new
             {
-                await roleManager.CreateAsync(new IdentityRole(role));
-                appLogger.LogInformation($"Role '{role}' created");
-            }
-        }
+                connected = canConnect,
+                pendingMigrations = pendingMigrations.Count(),
+                appliedMigrations = appliedMigrations.Count(),
+                provider = context.Database.ProviderName
+            },
+            timestamp = DateTime.UtcNow
+        });
     }
     catch (Exception ex)
     {
-        appLogger.LogError(ex, "An error occurred while migrating the database");
-        throw;
+        return Results.Ok(new
+        {
+            status = "unhealthy",
+            error = ex.Message,
+            timestamp = DateTime.UtcNow
+        });
     }
-}
+});
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

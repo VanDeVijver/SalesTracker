@@ -1,110 +1,143 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SalesTracker.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SalesTracker.Core.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
+            : base(options)
         {
         }
 
-        public DbSet<Project> Projects { get; set; } = null!;
-        public DbSet<Category> Categories { get; set; } = null!;
-        public DbSet<LeadChannel> LeadChannels { get; set; } = null!;
-        public DbSet<CategoryTarget> CategoryTargets { get; set; } = null!;
-        public DbSet<SystemSetting> SystemSettings { get; set; } = null!;
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<LeadChannel> LeadChannels { get; set; }
+        public DbSet<CategoryTarget> CategoryTargets { get; set; }
+        public DbSet<SystemSetting> SystemSettings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            //user seeding:
-            var adminRoleId = Guid.NewGuid().ToString();
-            var managerRoleId = Guid.NewGuid().ToString();
-            var userRoleId = Guid.NewGuid().ToString();
-
-            modelBuilder.Entity<IdentityRole>().HasData(
-                new IdentityRole
-                {
-                    Id = adminRoleId,
-                    Name = "Admin",
-                    NormalizedName = "ADMIN"
-                },
-                new IdentityRole
-                {
-                    Id = managerRoleId,
-                    Name = "Manager",
-                    NormalizedName = "MANAGER"
-                },
-                new IdentityRole
-                {
-                    Id = userRoleId,
-                    Name = "User",
-                    NormalizedName = "USER"
-                }
-            );
-
-            // Seed Admin User
-            var adminUserId = Guid.NewGuid().ToString();
-            var hasher = new PasswordHasher<ApplicationUser>();
-
-            var adminUser = new ApplicationUser
+            // Configure Project entity
+            modelBuilder.Entity<Project>(entity =>
             {
-                Id = adminUserId,
-                UserName = "admin@salestracker.com",
-                NormalizedUserName = "ADMIN@SALESTRACKER.COM",
-                Email = "admin@salestracker.com",
-                NormalizedEmail = "ADMIN@SALESTRACKER.COM",
-                EmailConfirmed = true,
-                FirstName = "System",
-                LastName = "Administrator",
-                SecurityStamp = Guid.NewGuid().ToString()
-            };
-            adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin@123");
+                entity.HasKey(e => e.Id);
 
-            modelBuilder.Entity<ApplicationUser>().HasData(adminUser);
+                entity.Property(e => e.Customer)
+                    .IsRequired()
+                    .HasMaxLength(200);
 
-            // Assign Admin role to Admin user
-            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
-                new IdentityUserRole<string>
-                {
-                    RoleId = adminRoleId,
-                    UserId = adminUserId
-                }
-            );
+                entity.Property(e => e.LostReason)
+                    .HasMaxLength(100);
 
-            // Configure indexes
-            modelBuilder.Entity<Project>()
-                .HasIndex(p => new { p.Date, p.Status })
-                .HasDatabaseName("IX_Projects_Date_Status");
+                entity.Property(e => e.Notes)
+                    .HasMaxLength(2000);
 
-            modelBuilder.Entity<Project>()
-                .HasIndex(p => p.CategoryId)
-                .HasDatabaseName("IX_Projects_CategoryId");
+                // Decimal properties
+                entity.Property(e => e.Amount)
+                    .HasColumnType("decimal(18,2)");
 
-            modelBuilder.Entity<Project>()
-                .HasIndex(p => p.LeadChannelId)
-                .HasDatabaseName("IX_Projects_LeadChannelId");
+                entity.Property(e => e.Purchase)
+                    .HasColumnType("decimal(18,2)");
 
-            modelBuilder.Entity<CategoryTarget>()
-                .HasIndex(ct => new { ct.Year, ct.CategoryId })
-                .IsUnique()
-                .HasDatabaseName("IX_CategoryTargets_Year_CategoryId");
+                entity.Property(e => e.ManualMarginPercentage)
+                    .HasColumnType("decimal(5,2)");
 
-            modelBuilder.Entity<SystemSetting>()
-                .HasIndex(s => s.Key)
-                .IsUnique()
-                .HasDatabaseName("IX_SystemSettings_Key");
+                entity.Property(e => e.Hours)
+                    .HasColumnType("decimal(18,2)");
 
+                entity.Property(e => e.CafcaMarginPercentage)
+                    .HasColumnType("decimal(5,2)");
+
+                entity.Property(e => e.CafcaHours)
+                    .HasColumnType("decimal(18,2)");
+
+                entity.Property(e => e.FinalInvoiceAmount)
+                    .HasColumnType("decimal(18,2)");
+
+                // Relationships - Use the navigation properties from Category and LeadChannel
+                entity.HasOne(e => e.Category)
+                    .WithMany(c => c.Projects)
+                    .HasForeignKey(e => e.CategoryId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.LeadChannel)
+                    .WithMany(l => l.Projects)
+                    .HasForeignKey(e => e.LeadChannelId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // Indexes
+                entity.HasIndex(e => e.Date);
+                entity.HasIndex(e => e.Status);
+                entity.HasIndex(e => e.CategoryId);
+                entity.HasIndex(e => e.LeadChannelId);
+            });
+
+            // Configure Category entity
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.HasIndex(e => e.Name)
+                    .IsUnique();
+            });
+
+            // Configure LeadChannel entity
+            modelBuilder.Entity<LeadChannel>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.HasIndex(e => e.Name)
+                    .IsUnique();
+            });
+
+            // Configure CategoryTarget entity
+            modelBuilder.Entity<CategoryTarget>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.TargetAmount)
+                    .HasColumnType("decimal(18,2)");
+
+                // Relationship using navigation property from Category
+                entity.HasOne(e => e.Category)
+                    .WithMany(c => c.Targets)
+                    .HasForeignKey(e => e.CategoryId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Unique constraint - one target per category per year
+                entity.HasIndex(e => new { e.CategoryId, e.Year })
+                    .IsUnique();
+            });
+
+            // Configure SystemSetting entity
+            modelBuilder.Entity<SystemSetting>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Key)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Value)
+                    .IsRequired();
+
+                entity.HasIndex(e => e.Key)
+                    .IsUnique();
+            });
+
+            // Seed initial data
             DataSeeder.Seed(modelBuilder);
         }
     }
