@@ -13,6 +13,14 @@ builder.Services.AddControllersWithViews();
 // Get connection string
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+}
+
+Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
+Console.WriteLine($"Connection string configured: {!string.IsNullOrEmpty(connectionString)}");
+
 // In production, use DATABASE_URL environment variable
 if (builder.Environment.IsProduction())
 {

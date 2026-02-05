@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: salestracker
-    env: dotnet
-    runtime: dotnet
-    plan: free
-    rootDir: .
-    buildCommand: dotnet publish SalesTracker.Web/SalesTracker.Web.csproj -c Release -o out
-    startCommand: dotnet out/SalesTracker.Web.dll
