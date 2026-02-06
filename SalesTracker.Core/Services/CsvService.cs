@@ -33,7 +33,7 @@ namespace SalesTracker.Core.Services
 
             var csv = new StringBuilder();
 
-            // Header - Updated
+            // Header
             csv.AppendLine("Date,Customer,ClientType,Category,LeadChannel,Status,Amount,Purchase,ManualMarginPercentage,Hours,CafcaMarginPercentage,CafcaHours,FinalInvoiceAmount,EndDate,LostReason,Notes");
 
             // Data rows
@@ -48,9 +48,9 @@ namespace SalesTracker.Core.Services
                     EscapeCsvField(project.Status.ToString()),
                     project.Amount.ToString(CultureInfo.InvariantCulture),
                     project.Purchase.ToString(CultureInfo.InvariantCulture),
-                    project.ManualMarginPercentage.ToString(CultureInfo.InvariantCulture), // Changed
+                    project.ManualMarginPercentage.ToString(CultureInfo.InvariantCulture),
                     project.Hours.ToString(CultureInfo.InvariantCulture),
-                    (project.CafcaMarginPercentage?.ToString(CultureInfo.InvariantCulture) ?? ""), // Changed
+                    (project.CafcaMarginPercentage?.ToString(CultureInfo.InvariantCulture) ?? ""),
                     (project.CafcaHours?.ToString(CultureInfo.InvariantCulture) ?? ""),
                     (project.FinalInvoiceAmount?.ToString(CultureInfo.InvariantCulture) ?? ""),
                     (project.EndDate?.ToString("yyyy-MM-dd") ?? ""),
@@ -75,11 +75,26 @@ namespace SalesTracker.Core.Services
 
             using var reader = new StreamReader(csvStream);
 
-            // Skip header
-            await reader.ReadLineAsync();
+            // Read and parse header
+            var headerLine = await reader.ReadLineAsync();
+            if (string.IsNullOrWhiteSpace(headerLine))
+            {
+                errors.Add("CSV file is empty");
+                return (0, errors);
+            }
 
-            var categories = await _context.Categories.ToDictionaryAsync(c => c.Name, c => c.Id);
-            var leadChannels = await _context.LeadChannels.ToDictionaryAsync(lc => lc.Name, lc => lc.Id);
+            var headers = ParseCsvLine(headerLine);
+
+            // Create header index map for flexible column ordering
+            var headerMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            for (int i = 0; i < headers.Length; i++)
+            {
+                headerMap[headers[i].Trim()] = i;
+            }
+
+            // Load existing categories and lead channels
+            var categories = await _context.Categories.ToDictionaryAsync(c => c.Name.ToLower(), c => c);
+            var leadChannels = await _context.LeadChannels.ToDictionaryAsync(lc => lc.Name.ToLower(), lc => lc);
 
             int lineNumber = 1;
             while (!reader.EndOfStream)
@@ -92,44 +107,101 @@ namespace SalesTracker.Core.Services
                 {
                     var fields = ParseCsvLine(line);
 
-                    if (fields.Length < 16)
+                    // Parse date
+                    var dateStr = GetField(fields, headerMap, "date");
+                    if (!DateTime.TryParse(dateStr, out var date))
                     {
-                        errors.Add($"Line {lineNumber}: Invalid number of fields");
+                        errors.Add($"Line {lineNumber}: Invalid date format '{dateStr}'");
                         continue;
                     }
 
+                    // Parse customer
+                    var customer = GetField(fields, headerMap, "customer");
+                    if (string.IsNullOrWhiteSpace(customer))
+                    {
+                        errors.Add($"Line {lineNumber}: Customer is required");
+                        continue;
+                    }
+
+                    // Parse client type
+                    var clientTypeStr = GetField(fields, headerMap, "clientType");
+                    if (!Enum.TryParse<ClientType>(clientTypeStr, true, out var clientType))
+                    {
+                        // Default to New if not specified or invalid
+                        clientType = ClientType.New;
+                    }
+
+                    // Get or create category
+                    var categoryName = GetField(fields, headerMap, "category");
+                    if (string.IsNullOrWhiteSpace(categoryName))
+                    {
+                        errors.Add($"Line {lineNumber}: Category is required");
+                        continue;
+                    }
+
+                    var categoryKey = categoryName.ToLower();
+                    if (!categories.ContainsKey(categoryKey))
+                    {
+                        var newCategory = new Category { Name = categoryName };
+                        _context.Categories.Add(newCategory);
+                        await _context.SaveChangesAsync();
+                        categories[categoryKey] = newCategory;
+                    }
+
+                    // Get or create lead channel
+                    var leadChannelName = GetField(fields, headerMap, "leadChannel");
+                    if (string.IsNullOrWhiteSpace(leadChannelName))
+                    {
+                        leadChannelName = "Unknown";
+                    }
+
+                    var leadChannelKey = leadChannelName.ToLower();
+                    if (!leadChannels.ContainsKey(leadChannelKey))
+                    {
+                        var newLeadChannel = new LeadChannel { Name = leadChannelName };
+                        _context.LeadChannels.Add(newLeadChannel);
+                        await _context.SaveChangesAsync();
+                        leadChannels[leadChannelKey] = newLeadChannel;
+                    }
+
+                    // Parse status
+                    var statusStr = GetField(fields, headerMap, "status");
+                    if (!Enum.TryParse<ProjectStatus>(statusStr, true, out var status))
+                    {
+                        status = ProjectStatus.Pending;
+                    }
+
+                    // Check for duplicate
+                    var exists = await _context.Projects
+                        .AnyAsync(p => p.Customer == customer && p.Date == date);
+
+                    if (exists)
+                    {
+                        errors.Add($"Line {lineNumber}: Duplicate project - {customer} on {date:yyyy-MM-dd}");
+                        continue;
+                    }
+
+                    // Create project
                     var project = new Project
                     {
-                        Date = DateTime.Parse(fields[0]),
-                        Customer = fields[1],
-                        ClientType = Enum.Parse<ClientType>(fields[2]),
-                        CategoryId = categories.GetValueOrDefault(fields[3], 0),
-                        LeadChannelId = leadChannels.GetValueOrDefault(fields[4], 0),
-                        Status = Enum.Parse<ProjectStatus>(fields[5]),
-                        Amount = decimal.Parse(fields[6], CultureInfo.InvariantCulture),
-                        Purchase = decimal.Parse(fields[7], CultureInfo.InvariantCulture),
-                        ManualMarginPercentage = decimal.Parse(fields[8], CultureInfo.InvariantCulture), // Changed
-                        Hours = decimal.Parse(fields[9], CultureInfo.InvariantCulture),
-                        CafcaMarginPercentage = string.IsNullOrEmpty(fields[10]) ? null : decimal.Parse(fields[10], CultureInfo.InvariantCulture), // Changed
-                        CafcaHours = string.IsNullOrEmpty(fields[11]) ? null : decimal.Parse(fields[11], CultureInfo.InvariantCulture),
-                        FinalInvoiceAmount = string.IsNullOrEmpty(fields[12]) ? null : decimal.Parse(fields[12], CultureInfo.InvariantCulture),
-                        EndDate = string.IsNullOrEmpty(fields[13]) ? null : DateTime.Parse(fields[13]),
-                        LostReason = string.IsNullOrEmpty(fields[14]) ? null : fields[14],
-                        Notes = string.IsNullOrEmpty(fields[15]) ? null : fields[15],
+                        Date = date,
+                        Customer = customer,
+                        ClientType = clientType,
+                        CategoryId = categories[categoryKey].Id,
+                        LeadChannelId = leadChannels[leadChannelKey].Id,
+                        Status = status,
+                        Amount = ParseDecimal(GetField(fields, headerMap, "amount")),
+                        Purchase = ParseDecimal(GetField(fields, headerMap, "purchase")),
+                        ManualMarginPercentage = ParseDecimal(GetField(fields, headerMap, "manualMargin")),
+                        Hours = ParseDecimal(GetField(fields, headerMap, "hours")),
+                        CafcaMarginPercentage = ParseDecimalNullable(GetField(fields, headerMap, "cafcaMargin")),
+                        CafcaHours = ParseDecimalNullable(GetField(fields, headerMap, "cafcaHours")),
+                        FinalInvoiceAmount = ParseDecimalNullable(GetField(fields, headerMap, "finalInvoiceAmount")),
+                        EndDate = ParseDateNullable(GetField(fields, headerMap, "endDate")),
+                        LostReason = GetFieldNullable(fields, headerMap, "lostReason"),
+                        Notes = GetFieldNullable(fields, headerMap, "notes"),
                         CreatedAt = DateTime.UtcNow
                     };
-
-                    if (project.CategoryId == 0)
-                    {
-                        errors.Add($"Line {lineNumber}: Invalid category '{fields[3]}'");
-                        continue;
-                    }
-
-                    if (project.LeadChannelId == 0)
-                    {
-                        errors.Add($"Line {lineNumber}: Invalid lead channel '{fields[4]}'");
-                        continue;
-                    }
 
                     _context.Projects.Add(project);
                     imported++;
@@ -146,6 +218,59 @@ namespace SalesTracker.Core.Services
             }
 
             return (imported, errors);
+        }
+
+        private string GetField(string[] fields, Dictionary<string, int> headerMap, string columnName)
+        {
+            if (headerMap.TryGetValue(columnName, out var index) && index < fields.Length)
+            {
+                return fields[index].Trim();
+            }
+            return string.Empty;
+        }
+
+        private string? GetFieldNullable(string[] fields, Dictionary<string, int> headerMap, string columnName)
+        {
+            var value = GetField(fields, headerMap, columnName);
+            return string.IsNullOrWhiteSpace(value) ? null : value;
+        }
+
+        private decimal ParseDecimal(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return 0;
+
+            // Remove common formatting characters
+            value = value.Replace("€", "").Replace("$", "").Replace(" ", "").Trim();
+
+            if (decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
+                return result;
+
+            // Try with current culture as fallback
+            if (decimal.TryParse(value, NumberStyles.Any, CultureInfo.CurrentCulture, out result))
+                return result;
+
+            return 0;
+        }
+
+        private decimal? ParseDecimalNullable(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return null;
+
+            var result = ParseDecimal(value);
+            return result == 0 ? null : result;
+        }
+
+        private DateTime? ParseDateNullable(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return null;
+
+            if (DateTime.TryParse(value, out var date))
+                return date;
+
+            return null;
         }
 
         private string EscapeCsvField(string field)

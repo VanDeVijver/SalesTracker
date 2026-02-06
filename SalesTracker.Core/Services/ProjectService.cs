@@ -149,5 +149,81 @@ namespace SalesTracker.Core.Services
 
             return stats;
         }
+
+        public async Task<(List<Project> projects, int totalCount)> GetFilteredProjectsAsync(
+            int? year = null,
+            int? categoryId = null,
+            int? leadChannelId = null,
+            string? status = null,
+            string? searchTerm = null,
+            int page = 1,
+            int pageSize = 10)
+        {
+            var query = _context.Projects
+                .Include(p => p.Category)
+                .Include(p => p.LeadChannel)
+                .AsQueryable();
+
+            // Apply filters
+            if (year.HasValue)
+            {
+                query = query.Where(p => p.Date.Year == year.Value);
+            }
+
+            if (categoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == categoryId.Value);
+            }
+
+            if (leadChannelId.HasValue)
+            {
+                query = query.Where(p => p.LeadChannelId == leadChannelId.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(status) && Enum.TryParse<ProjectStatus>(status, out var projectStatus))
+            {
+                query = query.Where(p => p.Status == projectStatus);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(p => p.Customer.Contains(searchTerm) ||
+                                        (p.Notes != null && p.Notes.Contains(searchTerm)));
+            }
+
+            // Get total count before pagination
+            var totalCount = await query.CountAsync();
+
+            // Apply sorting and pagination
+            var projects = await query
+                .OrderByDescending(p => p.Date)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (projects, totalCount);
+        }
+
+        /// <summary>
+        /// Gets all distinct statuses from the provided list of projects
+        /// </summary>
+        /// <param name="projects">List of projects to extract statuses from</param>
+        /// <returns>Collection of distinct ProjectStatus values found in the projects</returns>
+        public async Task<IEnumerable<ProjectStatus>> GetAllStatusesByProjects(List<Project> projects)
+        {
+            if (projects == null || !projects.Any())
+            {
+                return Enumerable.Empty<ProjectStatus>();
+            }
+
+            // If projects are already loaded in memory
+            var statuses = projects
+                .Select(p => p.Status)
+                .Distinct()
+                .OrderBy(s => s)
+                .ToList();
+
+            return await Task.FromResult(statuses);
+        }
     }
 }

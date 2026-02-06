@@ -28,12 +28,28 @@ namespace SalesTracker.Web.Controllers
         }
 
         // GET: Projects
-        public async Task<IActionResult> Index(int? year)
+        public async Task<IActionResult> Index(
+     int? year,
+     int? categoryId,
+     int? leadChannelId,
+     string? status,
+     string? searchTerm,
+     int page = 1)
         {
             var currentYear = year ?? DateTime.Now.Year;
-            var projects = await _projectService.GetProjectsByYearAsync(currentYear);
 
-            var viewModels = projects.Select(p => new ProjectViewModel
+            // Get filtered and paginated projects
+            var (projects, totalCount) = await _projectService.GetFilteredProjectsAsync(
+                currentYear,
+                categoryId,
+                leadChannelId,
+                status,
+                searchTerm,
+                page,
+                10);
+
+            // Map to view models
+            var projectViewModels = projects.Select(p => new ProjectViewModel
             {
                 Id = p.Id,
                 Date = p.Date,
@@ -46,9 +62,9 @@ namespace SalesTracker.Web.Controllers
                 Status = p.Status,
                 Amount = p.Amount,
                 Purchase = p.Purchase,
-                ManualMarginPercentage = p.ManualMarginPercentage, // Changed
+                ManualMarginPercentage = p.ManualMarginPercentage,
                 Hours = p.Hours,
-                CafcaMarginPercentage = p.CafcaMarginPercentage, // Changed
+                CafcaMarginPercentage = p.CafcaMarginPercentage,
                 CafcaHours = p.CafcaHours,
                 FinalInvoiceAmount = p.FinalInvoiceAmount,
                 EndDate = p.EndDate,
@@ -56,10 +72,38 @@ namespace SalesTracker.Web.Controllers
                 Notes = p.Notes
             }).ToList();
 
-            ViewBag.CurrentYear = currentYear;
-            ViewBag.Years = Enumerable.Range(2020, DateTime.Now.Year - 2019).Reverse();
+            // Get categories and lead channels for filters
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            var leadChannels = await _leadChannelService.GetAllLeadChannelsAsync();
 
-            return View(viewModels);
+            // Generate years list (from 2020 to current year)
+            var yearsList = Enumerable.Range(2020, DateTime.Now.Year - 2019)
+                .OrderByDescending(y => y)
+                .ToList();
+
+            // Create filter view model
+            var filterViewModel = new ProjectFilterViewModel
+            {
+                Year = currentYear,
+                CategoryId = categoryId,
+                LeadChannelId = leadChannelId,
+                Status = status,
+                SearchTerm = searchTerm,
+                Page = page,
+                PageSize = 10,
+                TotalItems = totalCount,
+                Projects = projectViewModels,
+                Categories = new SelectList(categories, "Id", "Name", categoryId),
+                LeadChannels = new SelectList(leadChannels, "Id", "Name", leadChannelId),
+                Years = new SelectList(yearsList, currentYear),
+                Statuses = new SelectList(Enum.GetValues<Core.Models.ProjectStatus>().Select(s => new
+                {
+                    Value = s.ToString(),
+                    Text = s.ToString()
+                }), "Value", "Text", status)
+            };
+
+            return View(filterViewModel);
         }
 
         // GET: Projects/Create

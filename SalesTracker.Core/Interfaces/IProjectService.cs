@@ -18,6 +18,18 @@ namespace SalesTracker.Core.Interfaces
         Task<IEnumerable<Project>> GetProjectsByYearAsync(int year);
         Task<IEnumerable<Project>> GetProjectsByCategoryAsync(int categoryId);
         Task<IEnumerable<Project>> GetProjectsByStatusAsync(ProjectStatus status);
+        Task<IEnumerable<ProjectStatus>> GetAllStatusesByProjects(List<Project> projects);
         Task<Dictionary<string, decimal>> GetDashboardStatsAsync(int year);
+
+
+        // New method for filtered and paginated results
+        Task<(List<Project> projects, int totalCount)> GetFilteredProjectsAsync(
+            int? year = null,
+            int? categoryId = null,
+            int? leadChannelId = null,
+            string? status = null,
+            string? searchTerm = null,
+            int page = 1,
+            int pageSize = 10);
     }
 }
