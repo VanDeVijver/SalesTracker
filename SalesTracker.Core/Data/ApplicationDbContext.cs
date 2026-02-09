@@ -36,6 +36,10 @@ namespace SalesTracker.Core.Data
                 entity.Property(e => e.Notes)
                     .HasMaxLength(2000);
 
+                entity.Property(e => e.ProjectLog)
+            .HasColumnType("text")
+            .IsRequired(false);
+
                 // Decimal properties
                 entity.Property(e => e.Amount)
                     .HasColumnType("decimal(18,2)");

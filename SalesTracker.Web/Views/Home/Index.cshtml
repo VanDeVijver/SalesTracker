@@ -3,185 +3,561 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="container mx-auto px-4 py-8">
-    <!-- Year Selector -->
-    <div class="flex justify-between items-center mb-8">
-        <h1 class="text-4xl font-black text-blue-900 uppercase">VENERGY CRM Dashboard</h1>
-        <div class="flex gap-4 items-center">
-            <label class="text-sm font-bold text-slate-700">Year:</label>
-            <select id="yearSelector" class="px-4 py-2 border-2 border-slate-200 rounded-xl font-bold" onchange="changeYear(this.value)">
-                @foreach (var year in ViewBag.Years)
-                {
-                    <option value="@year" selected="@(year == Model.CurrentYear)">@year</option>
-                }
-            </select>
-        </div>
-    </div>
-
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-500">
-            <div class="text-sm font-bold text-slate-500 uppercase mb-2">Total Projects</div>
-            <div class="text-3xl font-black text-blue-900">@Model.Stats["TotalProjects"]</div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-green-500">
-            <div class="text-sm font-bold text-slate-500 uppercase mb-2">Won Projects</div>
-            <div class="text-3xl font-black text-green-600">@Model.Stats["WonProjects"]</div>
-            <div class="text-sm text-slate-600 mt-2">€@Model.Stats["WonValue"].ToString("N0")</div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-yellow-500">
-            <div class="text-sm font-bold text-slate-500 uppercase mb-2">Pending Projects</div>
-            <div class="text-3xl font-black text-yellow-600">@Model.Stats["PendingProjects"]</div>
-            <div class="text-sm text-slate-600 mt-2">€@Model.Stats["PendingValue"].ToString("N0")</div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-red-500">
-            <div class="text-sm font-bold text-slate-500 uppercase mb-2">Lost Projects</div>
-            <div class="text-3xl font-black text-red-600">@Model.Stats["LostProjects"]</div>
-            <div class="text-sm text-slate-600 mt-2">€@Model.Stats["LostValue"].ToString("N0")</div>
-        </div>
-    </div>
-
-    <!-- Financial Overview -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div class="bg-gradient-to-br from-blue-900 to-blue-700 rounded-2xl shadow-xl p-6 text-white">
-            <div class="text-sm font-bold uppercase mb-2 opacity-80">Total Revenue</div>
-            <div class="text-4xl font-black">€@Model.Stats["TotalRevenue"].ToString("N0")</div>
-        </div>
-
-        <div class="bg-gradient-to-br from-green-600 to-green-500 rounded-2xl shadow-xl p-6 text-white">
-            <div class="text-sm font-bold uppercase mb-2 opacity-80">Total Margin</div>
-            <div class="text-4xl font-black">€@Model.Stats["TotalMargin"].ToString("N0")</div>
-        </div>
-
-        <div class="bg-gradient-to-br from-purple-600 to-purple-500 rounded-2xl shadow-xl p-6 text-white">
-            <div class="text-sm font-bold uppercase mb-2 opacity-80">Margin %</div>
-            <div class="text-4xl font-black">
-                @{
-                    var marginPercent = Model.Stats["TotalRevenue"] > 0
-                        ? (Model.Stats["TotalMargin"] / Model.Stats["TotalRevenue"] * 100)
-                        : 0;
-                }
-                @marginPercent.ToString("F1")%
-            </div>
-        </div>
-    </div>
-
-    <!-- Category Breakdown -->
-    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
-        <h2 class="text-2xl font-black text-blue-900 uppercase mb-6">Category Breakdown</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            @foreach (var category in Model.CategoryBreakdown)
-            {
-                <div class="border-2 border-slate-200 rounded-xl p-4">
-                    <div class="text-sm font-bold text-slate-700 uppercase mb-2">@category.Key</div>
-                    <div class="text-2xl font-black text-blue-900">€@category.Value.ToString("N0")</div>
+<div class="container-fluid py-4">
+    <!-- Header with Year/Month/Category Filters -->
+    <div class="card shadow-sm mb-4" style="background: linear-gradient(135deg, var(--accent-primary) 0%, #1a1a1a 100%); color: var(--accent-secondary);">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="h3 fw-black mb-0">📊 PROJECTS DASHBOARD</h1>
+                    <p class="mb-0 small opacity-75">Real-time project analytics</p>
                 </div>
-            }
+                <div class="col-md-6">
+                    <form asp-action="Index" method="get" class="row g-2 justify-content-end">
+                        <div class="col-auto">
+                            <label class="form-label small fw-bold mb-1">Year</label>
+                            <select name="year" class="form-select form-select-sm fw-bold" onchange="this.form.submit()">
+                                @for (int y = DateTime.Now.Year; y >= 2020; y--)
+                                {
+                                    <option value="@y" selected="@(y == Model.CurrentYear)">@y</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <label class="form-label small fw-bold mb-1">Month</label>
+                            <select name="month" class="form-select form-select-sm fw-bold" onchange="this.form.submit()">
+                                <option value="">Heel jaar</option>
+                                @for (int m = 1; m <= 12; m++)
+                                {
+                                    <option value="@m" selected="@(m == Model.Month)">
+                                        @System.Globalization.CultureInfo.GetCultureInfo("nl-NL").DateTimeFormat.GetMonthName(m)
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <label class="form-label small fw-bold mb-1">Category</label>
+                            <select name="category" class="form-select form-select-sm fw-bold" onchange="this.form.submit()">
+                                <option value="all">Alle Categorieën</option>
+                                @foreach (var cat in Model.Categories)
+                                {
+                                    <option value="@cat" selected="@(cat == Model.CategoryFilter)">@cat</option>
+                                }
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Status Breakdown Chart -->
-    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
-        <h2 class="text-2xl font-black text-blue-900 uppercase mb-6">Status Distribution</h2>
-        <div class="flex gap-8 items-center">
-            <div class="flex-1">
-                <canvas id="statusChart" height="200"></canvas>
+    <!-- ===== EXISTING: Stats Cards ===== -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-primary border-start border-4 shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="card-subtitle text-muted text-uppercase fw-bold mb-2">Total Projects</h6>
+                    <h2 class="card-title fw-black text-primary mb-0">@Model.Stats["TotalProjects"]</h2>
+                </div>
             </div>
-            <div class="space-y-4">
-                @foreach (var status in Model.StatusBreakdown)
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-success border-start border-4 shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="card-subtitle text-muted text-uppercase fw-bold mb-2">Won Projects</h6>
+                    <h2 class="card-title fw-black text-success mb-2">@Model.Stats["WonProjects"]</h2>
+                    <p class="card-text text-muted small mb-0">€@Model.Stats["WonValue"].ToString("N0")</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-warning border-start border-4 shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="card-subtitle text-muted text-uppercase fw-bold mb-2">Pending Projects</h6>
+                    <h2 class="card-title fw-black text-warning mb-2">@Model.Stats["PendingProjects"]</h2>
+                    <p class="card-text text-muted small mb-0">€@Model.Stats["PendingValue"].ToString("N0")</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card border-danger border-start border-4 shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="card-subtitle text-muted text-uppercase fw-bold mb-2">Lost Projects</h6>
+                    <h2 class="card-title fw-black text-danger mb-2">@Model.Stats["LostProjects"]</h2>
+                    <p class="card-text text-muted small mb-0">€@Model.Stats["LostValue"].ToString("N0")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== EXISTING: Financial Overview ===== -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-4">
+            <div class="card bg-primary text-white shadow h-100">
+                <div class="card-body">
+                    <h6 class="card-subtitle text-white-50 text-uppercase fw-bold mb-2">Total Revenue</h6>
+                    <h2 class="card-title fw-black mb-0">€@Model.Stats["TotalRevenue"].ToString("N0")</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card bg-success text-white shadow h-100">
+                <div class="card-body">
+                    <h6 class="card-subtitle text-white-50 text-uppercase fw-bold mb-2">Total Margin</h6>
+                    <h2 class="card-title fw-black mb-0">€@Model.Stats["TotalMargin"].ToString("N0")</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card bg-secondary text-white shadow h-100">
+                <div class="card-body">
+                    <h6 class="card-subtitle text-white-50 text-uppercase fw-bold mb-2">Margin %</h6>
+                    <h2 class="card-title fw-black mb-0">
+                        @{
+                            var marginPercent = Model.Stats["TotalRevenue"] > 0
+                                ? (Model.Stats["TotalMargin"] / Model.Stats["TotalRevenue"] * 100)
+                                : 0;
+                        }
+                        @marginPercent.ToString("F1")%
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== NEW: Additional KPI Cards ===== -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6 col-xl-3">
+            <div class="card shadow-sm border-0 border-bottom border-info border-4">
+                <div class="card-body">
+                    <h6 class="text-uppercase text-muted fw-bold small mb-2">Omzet (Won)</h6>
+                    <h2 class="fw-black text-info mb-0">€@Model.TotalWonRevenue.ToString("N0")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card shadow-sm border-0 border-bottom border-warning border-4">
+                <div class="card-body">
+                    <h6 class="text-uppercase text-muted fw-bold small mb-2">Target %</h6>
+                    <h2 class="fw-black text-warning mb-0">
+                        @Model.TargetPercentage.ToString("N0")%
+                        <small class="text-muted fs-6">/ €@Model.YearlyTarget.ToString("N0")</small>
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card shadow-sm border-0 border-bottom border-primary border-4">
+                <div class="card-body">
+                    <h6 class="text-uppercase text-muted fw-bold small mb-2">Pipeline (Pend.)</h6>
+                    <h2 class="fw-black text-primary mb-0">€@Model.TotalPipelineValue.ToString("N0")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card shadow-sm border-0 border-bottom border-danger border-4">
+                <div class="card-body">
+                    <h6 class="text-uppercase text-muted fw-bold small mb-2">Gem. Marge</h6>
+                    <h2 class="fw-black text-danger mb-0">@Model.AverageMargin.ToString("N1")%</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== NEW: Charts Grid ===== -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h3 class="card-title fw-black text-primary mb-0">📊 ANALYTICS CHARTS</h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="border rounded p-3">
+                        <h6 class="fw-bold text-uppercase small mb-3">📊 Pipeline per Categorie</h6>
+                        <div style="height: 250px;">
+                            <canvas id="pipelineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="border rounded p-3">
+                        <h6 class="fw-bold text-uppercase small mb-3">🎯 Behaald vs Target</h6>
+                        <div style="height: 250px;">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="border rounded p-3">
+                        <h6 class="fw-bold text-uppercase small mb-3">📈 Conversie Ratio</h6>
+                        <div style="height: 250px;">
+                            <canvas id="conversionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="border rounded p-3">
+                        <h6 class="fw-bold text-uppercase small mb-3">💰 Gemiddelde Marge</h6>
+                        <div style="height: 250px;">
+                            <canvas id="marginChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="border rounded p-3">
+                        <h6 class="fw-bold text-uppercase small mb-3">⏱️ Lead Time (Dagen)</h6>
+                        <div style="height: 250px;">
+                            <canvas id="leadTimeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="border rounded p-3">
+                        <h6 class="fw-bold text-uppercase small mb-3">❌ Lost Reasons</h6>
+                        <div style="height: 250px;">
+                            <canvas id="lostReasonsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== EXISTING: Category Breakdown ===== -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h3 class="card-title fw-black text-primary mb-4">CATEGORY BREAKDOWN</h3>
+            <div class="row g-3">
+                @foreach (var category in Model.CategoryBreakdown)
                 {
-                    var color = status.Key switch
-                    {
-                        "Pending" => "yellow",
-                        "Won" => "green",
-                        "Lost" => "red",
-                        _ => "gray"
-                    };
-                    <div class="flex items-center gap-3">
-                        <div class="w-4 h-4 rounded-full bg-@(color)-500"></div>
-                        <span class="font-bold text-slate-700">@status.Key: @status.Value</span>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="border rounded p-3">
+                            <h6 class="text-muted text-uppercase fw-bold small mb-2">@category.Key</h6>
+                            <h4 class="fw-black text-primary mb-0">€@category.Value.ToString("N0")</h4>
+                        </div>
                     </div>
                 }
             </div>
         </div>
     </div>
 
-    <!-- Recent Projects -->
-    <div class="bg-white rounded-2xl shadow-lg p-6">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-black text-blue-900 uppercase">Recent Projects</h2>
-            <a asp-controller="Projects" asp-action="Index" class="text-blue-600 font-bold hover:underline">View All →</a>
+    <!-- ===== NEW: Financial Analysis Tables ===== -->
+    @if (Model.Leakage != null && Model.Leakage.Any())
+    {
+        <div class="card shadow-sm border-danger border-top border-3 mb-4">
+            <div class="card-header bg-danger bg-opacity-10">
+                <h5 class="fw-black text-danger mb-0">⚠️ FINANCIAL LEAKAGE</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                            <tr class="small text-uppercase">
+                                <th>Klant</th>
+                                <th class="text-center">Marge +/-</th>
+                                <th class="text-center">Marge (Off / Caf)</th>
+                                <th class="text-center">Uren +/-</th>
+                                <th class="text-center">Uren (Off / Caf)</th>
+                                <th class="text-center">Impact Arbeid</th>
+                                <th class="text-end">Fin. Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Leakage)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@item.Customer</td>
+                                    <td class="text-center @(item.MarginDifference < 0 ? "text-danger" : "text-success")">
+                                        @item.MarginDifference.ToString("N1")%
+                                    </td>
+                                    <td class="text-center">@item.ManualMargin.ToString("N1")% / @item.CafcaMargin.ToString("N1")%</td>
+                                    <td class="text-center">@item.HoursDifference.ToString("N1")u</td>
+                                    <td class="text-center">@item.ManualHours.ToString("N1")u / @item.CafcaHours.ToString("N1")u</td>
+                                    <td class="text-center">€@Math.Abs(item.LaborImpact).ToString("N0")</td>
+                                    <td class="text-end fw-black text-danger">€@Math.Abs(item.TotalImpact).ToString("N0")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead>
-                    <tr class="border-b-2 border-slate-200">
-                        <th class="text-left py-3 px-4 font-black text-slate-700 uppercase text-xs">Date</th>
-                        <th class="text-left py-3 px-4 font-black text-slate-700 uppercase text-xs">Customer</th>
-                        <th class="text-left py-3 px-4 font-black text-slate-700 uppercase text-xs">Category</th>
-                        <th class="text-left py-3 px-4 font-black text-slate-700 uppercase text-xs">Status</th>
-                        <th class="text-right py-3 px-4 font-black text-slate-700 uppercase text-xs">Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var project in Model.RecentProjects)
-                    {
-                        var statusColor = project.Status switch
-                        {
-                            SalesTracker.Core.Models.ProjectStatus.Pending => "yellow",
-                            SalesTracker.Core.Models.ProjectStatus.Won => "green",
-                            SalesTracker.Core.Models.ProjectStatus.Lost => "red",
-                            _ => "gray"
-                        };
-                        <tr class="border-b border-slate-100 hover:bg-slate-50">
-                            <td class="py-3 px-4 text-sm">@project.Date.ToString("dd/MM/yyyy")</td>
-                            <td class="py-3 px-4 font-bold">@project.Customer</td>
-                            <td class="py-3 px-4 text-sm">@project.CategoryName</td>
-                            <td class="py-3 px-4">
-                                <span class="px-3 py-1 rounded-full text-xs font-bold bg-@(statusColor)-100 text-@(statusColor)-700">
-                                    @project.Status
-                                </span>
-                            </td>
-                            <td class="py-3 px-4 text-right font-bold">€@((project.FinalInvoiceAmount ?? project.Amount).ToString("N0"))</td>
+    }
+
+    @if (Model.Success != null && Model.Success.Any())
+    {
+        <div class="card shadow-sm border-success border-top border-3 mb-4">
+            <div class="card-header bg-success bg-opacity-10">
+                <h5 class="fw-black text-success mb-0">🚀 FINANCIAL SUCCESS</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                            <tr class="small text-uppercase">
+                                <th>Klant</th>
+                                <th class="text-center">Marge +/-</th>
+                                <th class="text-center">Marge (Off / Caf)</th>
+                                <th class="text-center">Uren +/-</th>
+                                <th class="text-center">Uren (Off / Caf)</th>
+                                <th class="text-center">Impact Arbeid</th>
+                                <th class="text-end">Fin. Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Success)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@item.Customer</td>
+                                    <td class="text-center @(item.MarginDifference < 0 ? "text-danger" : "text-success")">
+                                        @item.MarginDifference.ToString("N1")%
+                                    </td>
+                                    <td class="text-center">@item.ManualMargin.ToString("N1")% / @item.CafcaMargin.ToString("N1")%</td>
+                                    <td class="text-center">@item.HoursDifference.ToString("N1")u</td>
+                                    <td class="text-center">@item.ManualHours.ToString("N1")u / @item.CafcaHours.ToString("N1")u</td>
+                                    <td class="text-center">€@Math.Abs(item.LaborImpact).ToString("N0")</td>
+                                    <td class="text-end fw-black text-success">€@Math.Abs(item.TotalImpact).ToString("N0")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- ===== EXISTING: Recent Projects ===== -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="card-title fw-black text-primary mb-0">RECENT PROJECTS</h3>
+                <a asp-controller="Projects" asp-action="Index" class="btn btn-link text-primary fw-bold">View All →</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="fw-black text-uppercase small">Date</th>
+                            <th class="fw-black text-uppercase small">Customer</th>
+                            <th class="fw-black text-uppercase small">Category</th>
+                            <th class="fw-black text-uppercase small">Status</th>
+                            <th class="text-end fw-black text-uppercase small">Amount</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var project in Model.RecentProjects)
+                        {
+                            var statusBadgeClass = project.Status switch
+                            {
+                                SalesTracker.Core.Models.ProjectStatus.Pending => "bg-warning text-dark",
+                                SalesTracker.Core.Models.ProjectStatus.Won => "bg-success text-white",
+                                SalesTracker.Core.Models.ProjectStatus.Lost => "bg-danger text-white",
+                                _ => "bg-secondary text-white"
+                            };
+                            <tr>
+                                <td class="small">@project.Date.ToString("dd/MM/yyyy")</td>
+                                <td class="fw-bold">@project.Customer</td>
+                                <td class="small">@project.CategoryName</td>
+                                <td>
+                                    <span class="badge @statusBadgeClass">@project.Status</span>
+                                </td>
+                                <td class="text-end fw-bold">€@((project.FinalInvoiceAmount ?? project.Amount).ToString("N0"))</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        function changeYear(year) {
-            window.location.href = `/?year=${year}`;
+        console.log('🔍 Chart.js Debug Info');
+
+        // Parse chart data from server with error handling
+        let pipelineData, categoryData, conversionData, marginData, leadTimeData, lostReasonsData;
+
+        try {
+            pipelineData = @Html.Raw(Model.PipelineChartData);
+            console.log('Pipeline Data:', pipelineData);
+        } catch (e) {
+            console.error('Error parsing pipeline data:', e);
+            pipelineData = { labels: [], datasets: [] };
         }
 
-        // Status Chart
-        const ctx = document.getElementById('statusChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Pending', 'Won', 'Lost'],
-                datasets: [{
-                    data: [@Model.StatusBreakdown["Pending"], @Model.StatusBreakdown["Won"], @Model.StatusBreakdown["Lost"]],
-                    backgroundColor: ['#eab308', '#22c55e', '#ef4444'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
+        try {
+            categoryData = @Html.Raw(Model.CategoryChartData);
+            console.log('Category Data:', categoryData);
+        } catch (e) {
+            console.error('Error parsing category data:', e);
+            categoryData = { labels: [], datasets: [] };
+        }
+
+        try {
+            conversionData = @Html.Raw(Model.ConversionChartData);
+            console.log('Conversion Data:', conversionData);
+        } catch (e) {
+            console.error('Error parsing conversion data:', e);
+            conversionData = { labels: [], datasets: [] };
+        }
+
+        try {
+            marginData = @Html.Raw(Model.MarginChartData);
+            console.log('Margin Data:', marginData);
+        } catch (e) {
+            console.error('Error parsing margin data:', e);
+            marginData = { labels: [], datasets: [] };
+        }
+
+        try {
+            leadTimeData = @Html.Raw(Model.LeadTimeChartData);
+            console.log('Lead Time Data:', leadTimeData);
+        } catch (e) {
+            console.error('Error parsing lead time data:', e);
+            leadTimeData = { labels: [], datasets: [] };
+        }
+
+        try {
+            lostReasonsData = @Html.Raw(Model.LostReasonsChartData);
+            console.log('Lost Reasons Data:', lostReasonsData);
+        } catch (e) {
+            console.error('Error parsing lost reasons data:', e);
+            lostReasonsData = { labels: [], datasets: [] };
+        }
+
+        // Common chart options
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 11,
+                            weight: 'bold'
+                        }
                     }
                 }
             }
-        });
+        };
+
+        // Initialize charts with error handling
+        try {
+            new Chart(document.getElementById('pipelineChart'), {
+                type: 'bar',
+                data: pipelineData,
+                options: commonOptions
+            });
+            console.log('✅ Pipeline chart initialized');
+        } catch (e) {
+            console.error('❌ Error initializing pipeline chart:', e);
+        }
+
+        try {
+            new Chart(document.getElementById('categoryChart'), {
+                type: 'bar',
+                data: categoryData,
+                options: commonOptions
+            });
+            console.log('✅ Category chart initialized');
+        } catch (e) {
+            console.error('❌ Error initializing category chart:', e);
+        }
+
+        try {
+            new Chart(document.getElementById('conversionChart'), {
+                type: 'bar',
+                data: conversionData,
+                options: commonOptions
+            });
+            console.log('✅ Conversion chart initialized');
+        } catch (e) {
+            console.error('❌ Error initializing conversion chart:', e);
+        }
+
+        try {
+            new Chart(document.getElementById('marginChart'), {
+                type: 'bar',
+                data: marginData,
+                options: commonOptions
+            });
+            console.log('✅ Margin chart initialized');
+        } catch (e) {
+            console.error('❌ Error initializing margin chart:', e);
+        }
+
+        try {
+            new Chart(document.getElementById('leadTimeChart'), {
+                type: 'bar',
+                data: leadTimeData,
+                options: {
+                    ...commonOptions,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function (value) {
+                                    return value + ' dgn';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: 11,
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return context.dataset.label + ': ' + context.parsed.x + ' dagen';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            console.log('✅ Lead time chart initialized');
+        } catch (e) {
+            console.error('❌ Error initializing lead time chart:', e);
+        }
+
+        try {
+            new Chart(document.getElementById('lostReasonsChart'), {
+                type: 'radar',
+                data: lostReasonsData,
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+            console.log('✅ Lost reasons chart initialized');
+        } catch (e) {
+            console.error('❌ Error initializing lost reasons chart:', e);
+        }
+
+        console.log('🎉 All charts initialization complete');
     </script>
 }

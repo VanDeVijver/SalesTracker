@@ -66,8 +66,17 @@ namespace SalesTracker.Core.Entities
         public string? LostReason { get; set; }
 
         [MaxLength(2000)]
+        
         public string? Notes { get; set; }
+        // ===== NEW: Project Checklist =====
+        public bool CheckCafca { get; set; }
+        public bool CheckFolder { get; set; }
+        public bool CheckMaterial { get; set; }
+        public bool CheckPlanning { get; set; }
 
+        // ===== NEW: Project Log (stored as JSON) =====
+        [Column(TypeName = "text")]
+        public string? ProjectLog { get; set; }
         // Audit
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
@@ -80,5 +89,30 @@ namespace SalesTracker.Core.Entities
         public decimal? CafcaMarginAmount => FinalInvoiceAmount.HasValue && CafcaMarginPercentage.HasValue
             ? FinalInvoiceAmount.Value * (CafcaMarginPercentage.Value / 100)
             : null;
+
+        [NotMapped]
+        public List<ProjectLogEntry> LogEntries
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(ProjectLog))
+                    return new List<ProjectLogEntry>();
+
+                try
+                {
+                    return System.Text.Json.JsonSerializer.Deserialize<List<ProjectLogEntry>>(ProjectLog)
+                           ?? new List<ProjectLogEntry>();
+                }
+                catch
+                {
+                    return new List<ProjectLogEntry>();
+                }
+            }
+            set
+            {
+                ProjectLog = System.Text.Json.JsonSerializer.Serialize(value);
+            }
+        }
     }
 }
+

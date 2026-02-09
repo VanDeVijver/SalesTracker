@@ -73,6 +73,22 @@ namespace SalesTracker.Web.ViewModels
         [MaxLength(2000)]
         public string? Notes { get; set; }
 
+        // ===== NEW: Checklist Fields =====
+        [Display(Name = "In CafCa")]
+        public bool CheckCafca { get; set; }
+
+        [Display(Name = "Mapje (Folder)")]
+        public bool CheckFolder { get; set; }
+
+        [Display(Name = "Materiaal (Material)")]
+        public bool CheckMaterial { get; set; }
+
+        [Display(Name = "Planning")]
+        public bool CheckPlanning { get; set; }
+
+        // ===== NEW: Project Log =====
+        public List<ProjectLogEntry> LogEntries { get; set; } = new();
+
         // For display
         public string? CategoryName { get; set; }
         public string? LeadChannelName { get; set; }

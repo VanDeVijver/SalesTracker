@@ -73,6 +73,20 @@ namespace SalesTracker.Core.Services
             existing.Notes = project.Notes;
             existing.LostReason = project.LostReason;
             existing.UpdatedAt = DateTime.UtcNow;
+            existing.CheckCafca = project.CheckCafca;
+            existing.CheckFolder = project.CheckFolder;
+            existing.CheckMaterial = project.CheckMaterial;
+            existing.CheckPlanning = project.CheckPlanning;
+            existing.ProjectLog = project.ProjectLog;
+
+            if (project.EndDate.HasValue)
+            {
+                existing.EndDate = DateTime.SpecifyKind(project.EndDate.Value, DateTimeKind.Utc);
+            }
+            else
+            {
+                existing.EndDate = null;
+            }
 
             if (project.EndDate.HasValue)
             {

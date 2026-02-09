@@ -2,437 +2,309 @@
 @{
     ViewData["Title"] = "Projects";
 }
-@* DEBUG - Remove after fixing *@
-<div class="bg-yellow-100 p-4 mb-4 rounded">
-    <strong>Debug Info:</strong><br />
-    Current Year: @Model.Year<br />
-    Total Items: @Model.TotalItems<br />
-    Years in SelectList: @string.Join(", ", Model.Years?.Select(y => y.Value) ?? new List<string>())<br />
-    Selected Year: @Model.Years?.FirstOrDefault(y => y.Selected)?.Value
-</div>
 
-<div class="container mx-auto px-4 py-8">
+<div class="container-fluid py-4">
     <!-- Header -->
-    <div class="flex justify-between items-center mb-8">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="text-4xl font-black text-blue-900 uppercase">
-                Projects
-                <span class="text-slate-500 text-2xl">(@Model.TotalItems total)</span>
+            <h1 class="display-5 fw-black text-primary">
+                PROJECTS
+                <span class="text-muted fs-4">(@Model.TotalItems total)</span>
             </h1>
-            <p class="text-slate-600 mt-2">Manage all your sales projects</p>
+            <p class="text-muted">Manage all your sales projects</p>
         </div>
-        <div class="flex gap-4">
-            <a asp-action="Create" class="bg-blue-900 text-white px-6 py-3 rounded-xl font-black uppercase hover:bg-blue-800 transition">
-                + New Project
-            </a>
-        </div>
+        <a asp-action="Create" class="btn btn-primary btn-lg fw-black text-uppercase">
+            + New Project
+        </a>
     </div>
 
     <!-- Filters Card -->
-    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
-        <form asp-action="Index" method="get" class="grid grid-cols-1 md:grid-cols-6 gap-4">
-            <!-- Year Filter -->
-            <div>
-                <label class="block text-[10px] font-black uppercase text-slate-600 mb-2">Year</label>
-                <select name="year" class="w-full px-4 py-2 border-2 border-slate-200 rounded-xl font-bold" onchange="this.form.submit()">
-                    @{
-                        var startYear = 2020;
-                        var endYear = DateTime.Now.Year;
-                        for (int y = endYear; y >= startYear; y--)
-                        {
-                            <option value="@y" selected="@(y == Model.Year)">@y</option>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="row g-3">
+                <div class="col-md-2">
+                    <label class="form-label fw-bold text-uppercase small">Year</label>
+                    <select name="year" class="form-select" onchange="this.form.submit()">
+                        @{
+                            var startYear = 2020;
+                            var endYear = DateTime.Now.Year;
+                            for (int y = endYear; y >= startYear; y--)
+                            {
+                                <option value="@y" selected="@(y == Model.Year)">@y</option>
+                            }
                         }
-                    }
-                </select>
-            </div>
+                    </select>
+                </div>
 
-            <!-- Category Filter -->
-            <div>
-                <label class="block text-[10px] font-black uppercase text-slate-600 mb-2">Category</label>
-                <select name="categoryId" class="w-full px-4 py-2 border-2 border-slate-200 rounded-xl font-bold" onchange="this.form.submit()">
-                    <option value="">All Categories</option>
-                    @foreach (var item in Model.Categories!)
-                    {
-                        <option value="@item.Value" selected="@(item.Selected)">@item.Text</option>
-                    }
-                </select>
-            </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold text-uppercase small">Category</label>
+                    <select name="categoryId" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Categories</option>
+                        @foreach (var item in Model.Categories!)
+                        {
+                            <option value="@item.Value" selected="@(item.Selected)">@item.Text</option>
+                        }
+                    </select>
+                </div>
 
-            <!-- Lead Channel Filter -->
-            <div>
-                <label class="block text-[10px] font-black uppercase text-slate-600 mb-2">Lead Channel</label>
-                <select name="leadChannelId" class="w-full px-4 py-2 border-2 border-slate-200 rounded-xl font-bold" onchange="this.form.submit()">
-                    <option value="">All Channels</option>
-                    @foreach (var item in Model.LeadChannels!)
-                    {
-                        <option value="@item.Value" selected="@(item.Selected)">@item.Text</option>
-                    }
-                </select>
-            </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold text-uppercase small">Lead Channel</label>
+                    <select name="leadChannelId" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Channels</option>
+                        @foreach (var item in Model.LeadChannels!)
+                        {
+                            <option value="@item.Value" selected="@(item.Selected)">@item.Text</option>
+                        }
+                    </select>
+                </div>
 
-            <!-- Status Filter -->
-            <div>
-                <label class="block text-[10px] font-black uppercase text-slate-600 mb-2">Status</label>
-                <select name="status" class="w-full px-4 py-2 border-2 border-slate-200 rounded-xl font-bold" onchange="this.form.submit()">
-                    <option value="">All Statuses</option>
-                    @foreach (var item in Model.Statuses!)
-                    {
-                        <option value="@item.Value" selected="@(item.Selected)">@item.Text</option>
-                    }
-                </select>
-            </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold text-uppercase small">Status</label>
+                    <select name="status" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Statuses</option>
+                        @foreach (var item in Model.Statuses!)
+                        {
+                            <option value="@item.Value" selected="@(item.Selected)">@item.Text</option>
+                        }
+                    </select>
+                </div>
 
-            <!-- Search -->
-            <div>
-                <label class="block text-[10px] font-black uppercase text-slate-600 mb-2">Search Customer</label>
-                <input type="text" name="searchTerm" value="@Model.SearchTerm"
-                       placeholder="Search..."
-                       class="w-full px-4 py-2 border-2 border-slate-200 rounded-xl font-bold">
-            </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-uppercase small">Search Customer</label>
+                    <input type="text" name="searchTerm" value="@Model.SearchTerm" placeholder="Search..." class="form-control">
+                </div>
 
-            <!-- Action Buttons -->
-            <div class="flex items-end gap-2">
-                <button type="submit" class="px-4 py-2 bg-blue-900 text-white rounded-xl font-bold hover:bg-blue-800">
-                    🔍 Search
-                </button>
-                <a asp-action="Index" asp-route-year="@Model.Year"
-                   class="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-300">
-                    ✕ Clear
-                </a>
-            </div>
-        </form>
-    </div>
-
-    <!-- Actions Bar -->
-    <div class="bg-white rounded-2xl shadow-lg p-4 mb-6 flex justify-between items-center">
-        <div class="flex gap-4">
-            <button onclick="showView('table')" id="btn-table" class="px-4 py-2 rounded-lg font-bold bg-blue-900 text-white">
-                📋 Table
-            </button>
-            <button onclick="showView('kanban')" id="btn-kanban" class="px-4 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-100">
-                📊 Kanban
-            </button>
-        </div>
-        <div class="flex gap-4">
-            <a asp-action="ExportCsv" asp-route-year="@Model.Year" class="px-4 py-2 rounded-lg font-bold text-green-600 hover:bg-green-50">
-                📥 Export CSV
-            </a>
-            <button onclick="document.getElementById('importFile').click()" class="px-4 py-2 rounded-lg font-bold text-purple-600 hover:bg-purple-50">
-                📤 Import CSV
-            </button>
-            <form asp-action="ImportCsv" method="post" enctype="multipart/form-data" id="importForm" class="hidden">
-                @Html.AntiForgeryToken()
-                <input type="file" id="importFile" name="file" accept=".csv" onchange="this.form.submit()" />
+                <div class="col-md-1 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-primary fw-bold">🔍</button>
+                    <a asp-action="Index" asp-route-year="@Model.Year" class="btn btn-secondary fw-bold">✕</a>
+                </div>
             </form>
         </div>
     </div>
 
+    <!-- Actions Bar -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div class="btn-group" role="group">
+                <button onclick="showView('table')" id="btn-table" class="btn btn-primary fw-bold">📋 Table</button>
+                <button onclick="showView('kanban')" id="btn-kanban" class="btn btn-outline-primary fw-bold">📊 Kanban</button>
+            </div>
+            <div class="d-flex gap-2">
+                <a asp-action="ExportCsv" asp-route-year="@Model.Year" class="btn btn-success fw-bold">📥 Export CSV</a>
+                <button onclick="document.getElementById('importFile').click()" class="btn btn-info fw-bold">📤 Import CSV</button>
+                <form asp-action="ImportCsv" method="post" enctype="multipart/form-data" id="importForm" class="d-none">
+                    @Html.AntiForgeryToken()
+                    <input type="file" id="importFile" name="file" accept=".csv" onchange="this.form.submit()" />
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Table View -->
-    <div id="tableView" class="bg-white rounded-2xl shadow-lg overflow-hidden">
+    <div id="tableView">
         @if (Model.Projects.Any())
         {
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="bg-slate-50">
-                        <tr>
-                            <th class="text-left py-4 px-4 font-black text-slate-700 uppercase text-xs">Date</th>
-                            <th class="text-left py-4 px-4 font-black text-slate-700 uppercase text-xs">Customer</th>
-                            <th class="text-left py-4 px-4 font-black text-slate-700 uppercase text-xs">Type</th>
-                            <th class="text-left py-4 px-4 font-black text-slate-700 uppercase text-xs">Category</th>
-                            <th class="text-left py-4 px-4 font-black text-slate-700 uppercase text-xs">Lead Channel</th>
-                            <th class="text-left py-4 px-4 font-black text-slate-700 uppercase text-xs">Status</th>
-                            <th class="text-right py-4 px-4 font-black text-slate-700 uppercase text-xs">Amount</th>
-                            <th class="text-right py-4 px-4 font-black text-slate-700 uppercase text-xs">Margin %</th>
-                            <th class="text-center py-4 px-4 font-black text-slate-700 uppercase text-xs">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var project in Model.Projects)
-                        {
-                            var statusColor = project.Status switch
-                            {
-                                SalesTracker.Core.Models.ProjectStatus.Pending => "yellow",
-                                SalesTracker.Core.Models.ProjectStatus.Won => "green",
-                                SalesTracker.Core.Models.ProjectStatus.Lost => "red",
-                                _ => "gray"
-                            };
-                            <tr class="border-b border-slate-100 hover:bg-slate-50">
-                                <td class="py-4 px-4 text-sm">@project.Date.ToString("dd/MM/yyyy")</td>
-                                <td class="py-4 px-4 font-bold">@project.Customer</td>
-                                <td class="py-4 px-4">
-                                    <span class="px-2 py-1 bg-slate-100 rounded text-xs font-bold">
-                                        @project.ClientType
-                                    </span>
-                                </td>
-                                <td class="py-4 px-4 text-sm">@project.CategoryName</td>
-                                <td class="py-4 px-4 text-sm channel-style">@project.LeadChannelName</td>
-                                <td class="py-4 px-4">
-                                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-@(statusColor)-100 text-@(statusColor)-700">
-                                        @project.Status
-                                    </span>
-                                </td>
-                                <td class="py-4 px-4 text-right font-bold amount-style">€@project.Amount.ToString("N0")</td>
-                                <td class="py-4 px-4 text-right font-bold margin-style">@project.ManualMarginPercentage.ToString("N2")%</td>
-                                <td class="py-4 px-4">
-                                    <div class="flex justify-center gap-2">
-                                        <a asp-action="Edit" asp-route-id="@project.Id" class="text-blue-600 hover:text-blue-800 font-bold">Edit</a>
-                                        <form asp-action="Delete" asp-route-id="@project.Id" method="post" class="inline" onsubmit="return confirm('Are you sure you want to delete this project?')">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="text-red-600 hover:text-red-800 font-bold">Delete</button>
-                                        </form>
-                                    </div>
-                                </td>
+            <div class="card shadow-sm">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="fw-black text-uppercase small">Date</th>
+                                <th class="fw-black text-uppercase small">Customer</th>
+                                <th class="fw-black text-uppercase small">Type</th>
+                                <th class="fw-black text-uppercase small">Category</th>
+                                <th class="fw-black text-uppercase small">Lead Channel</th>
+                                <th class="fw-black text-uppercase small">Status</th>
+                                <th class="text-end fw-black text-uppercase small">Amount</th>
+                                <th class="text-end fw-black text-uppercase small">Margin %</th>
+                                <th class="text-center fw-black text-uppercase small">Actions</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Pagination -->
-            @if (Model.TotalPages > 1)
-            {
-                <div class="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                    <div class="flex justify-between items-center">
-                        <div class="text-sm text-slate-600">
-                            Showing <span class="font-bold">@Model.Projects.Count</span> of <span class="font-bold">@Model.TotalItems</span> projects
-                        </div>
-
-                        <div class="flex gap-2">
-                            <!-- Previous Button -->
-                            @if (Model.Page > 1)
+                        </thead>
+                        <tbody>
+                            @foreach (var project in Model.Projects)
                             {
-                                <a asp-action="Index"
-                                   asp-route-year="@Model.Year"
-                                   asp-route-categoryId="@Model.CategoryId"
-                                   asp-route-leadChannelId="@Model.LeadChannelId"
-                                   asp-route-status="@Model.Status"
-                                   asp-route-searchTerm="@Model.SearchTerm"
-                                   asp-route-page="@(Model.Page - 1)"
-                                   class="px-3 py-2 bg-white border-2 border-slate-200 rounded-lg font-bold hover:bg-slate-50">
-                                    ← Prev
-                                </a>
-                            }
-                            else
-                            {
-                                <span class="px-3 py-2 bg-slate-100 border-2 border-slate-200 rounded-lg font-bold text-slate-400 cursor-not-allowed">
-                                    ← Prev
-                                </span>
-                            }
-
-                            <!-- Page Numbers -->
-                            @{
-                                var startPage = Math.Max(1, Model.Page - 2);
-                                var endPage = Math.Min(Model.TotalPages, Model.Page + 2);
-                            }
-
-                            @if (startPage > 1)
-                            {
-                                <a asp-action="Index"
-                                   asp-route-year="@Model.Year"
-                                   asp-route-categoryId="@Model.CategoryId"
-                                   asp-route-leadChannelId="@Model.LeadChannelId"
-                                   asp-route-status="@Model.Status"
-                                   asp-route-searchTerm="@Model.SearchTerm"
-                                   asp-route-page="1"
-                                   class="px-3 py-2 bg-white border-2 border-slate-200 rounded-lg font-bold hover:bg-slate-50">
-                                    1
-                                </a>
-                                @if (startPage > 2)
+                                var statusBadgeClass = project.Status switch
                                 {
-                                    <span class="px-3 py-2">...</span>
-                                }
+                                    SalesTracker.Core.Models.ProjectStatus.Pending => "bg-warning text-dark",
+                                    SalesTracker.Core.Models.ProjectStatus.Won => "bg-success text-white",
+                                    SalesTracker.Core.Models.ProjectStatus.Lost => "bg-danger text-white",
+                                    _ => "bg-secondary text-white"
+                                };
+                                <tr>
+                                    <td class="small">@project.Date.ToString("dd/MM/yyyy")</td>
+                                    <td class="fw-bold">@project.Customer</td>
+                                    <td><span class="badge bg-light text-dark">@project.ClientType</span></td>
+                                    <td class="small">@project.CategoryName</td>
+                                    <td class="small channel-style">@project.LeadChannelName</td>
+                                    <td><span class="badge @statusBadgeClass">@project.Status</span></td>
+                                    <td class="text-end fw-bold amount-style">€@project.Amount.ToString("N0")</td>
+                                    <td class="text-end fw-bold margin-style">@project.ManualMarginPercentage.ToString("N2")%</td>
+                                    <td class="text-center">
+                                        <a asp-action="Edit" asp-route-id="@project.Id" class="btn btn-sm btn-primary">Edit</a>
+                                        <form asp-action="Delete" asp-route-id="@project.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure?')">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
                             }
+                        </tbody>
+                    </table>
+                </div>
 
-                            @for (int i = startPage; i <= endPage; i++)
-                            {
-                                @if (i == Model.Page)
-                                {
-                                    <span class="px-3 py-2 bg-blue-900 text-white border-2 border-blue-900 rounded-lg font-bold">
-                                        @i
-                                    </span>
-                                }
-                                else
-                                {
-                                    <a asp-action="Index"
-                                       asp-route-year="@Model.Year"
-                                       asp-route-categoryId="@Model.CategoryId"
-                                       asp-route-leadChannelId="@Model.LeadChannelId"
-                                       asp-route-status="@Model.Status"
-                                       asp-route-searchTerm="@Model.SearchTerm"
-                                       asp-route-page="@i"
-                                       class="px-3 py-2 bg-white border-2 border-slate-200 rounded-lg font-bold hover:bg-slate-50">
-                                        @i
-                                    </a>
-                                }
-                            }
+                <!-- Pagination -->
+                @if (Model.TotalPages > 1)
+                {
+                    <div class="card-footer bg-light">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">
+                                Showing <strong>@Model.Projects.Count</strong> of <strong>@Model.TotalItems</strong> projects
+                            </span>
 
-                            @if (endPage < Model.TotalPages)
-                            {
-                                @if (endPage < Model.TotalPages - 1)
-                                {
-                                    <span class="px-3 py-2">...</span>
-                                }
-                                <a asp-action="Index"
-                                   asp-route-year="@Model.Year"
-                                   asp-route-categoryId="@Model.CategoryId"
-                                   asp-route-leadChannelId="@Model.LeadChannelId"
-                                   asp-route-status="@Model.Status"
-                                   asp-route-searchTerm="@Model.SearchTerm"
-                                   asp-route-page="@Model.TotalPages"
-                                   class="px-3 py-2 bg-white border-2 border-slate-200 rounded-lg font-bold hover:bg-slate-50">
-                                    @Model.TotalPages
-                                </a>
-                            }
+                            <nav>
+                                <ul class="pagination pagination-sm mb-0">
+                                    @if (Model.Page > 1)
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link" asp-action="Index"
+                                               asp-route-year="@Model.Year"
+                                               asp-route-categoryId="@Model.CategoryId"
+                                               asp-route-leadChannelId="@Model.LeadChannelId"
+                                               asp-route-status="@Model.Status"
+                                               asp-route-searchTerm="@Model.SearchTerm"
+                                               asp-route-page="@(Model.Page - 1)">← Prev</a>
+                                        </li>
+                                    }
 
-                            <!-- Next Button -->
-                            @if (Model.Page < Model.TotalPages)
-                            {
-                                <a asp-action="Index"
-                                   asp-route-year="@Model.Year"
-                                   asp-route-categoryId="@Model.CategoryId"
-                                   asp-route-leadChannelId="@Model.LeadChannelId"
-                                   asp-route-status="@Model.Status"
-                                   asp-route-searchTerm="@Model.SearchTerm"
-                                   asp-route-page="@(Model.Page + 1)"
-                                   class="px-3 py-2 bg-white border-2 border-slate-200 rounded-lg font-bold hover:bg-slate-50">
-                                    Next →
-                                </a>
-                            }
-                            else
-                            {
-                                <span class="px-3 py-2 bg-slate-100 border-2 border-slate-200 rounded-lg font-bold text-slate-400 cursor-not-allowed">
-                                    Next →
-                                </span>
-                            }
-                        </div>
+                                    @{
+                                        var startPage = Math.Max(1, Model.Page - 2);
+                                        var endPage = Math.Min(Model.TotalPages, Model.Page + 2);
+                                    }
 
-                        <div class="text-sm text-slate-600">
-                            Page <span class="font-bold">@Model.Page</span> of <span class="font-bold">@Model.TotalPages</span>
+                                    @for (int i = startPage; i <= endPage; i++)
+                                    {
+                                        <li class="page-item @(i == Model.Page ? "active" : "")">
+                                            <a class="page-link" asp-action="Index"
+                                               asp-route-year="@Model.Year"
+                                               asp-route-categoryId="@Model.CategoryId"
+                                               asp-route-leadChannelId="@Model.LeadChannelId"
+                                               asp-route-status="@Model.Status"
+                                               asp-route-searchTerm="@Model.SearchTerm"
+                                               asp-route-page="@i">@i</a>
+                                        </li>
+                                    }
+
+                                    @if (Model.Page < Model.TotalPages)
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link" asp-action="Index"
+                                               asp-route-year="@Model.Year"
+                                               asp-route-categoryId="@Model.CategoryId"
+                                               asp-route-leadChannelId="@Model.LeadChannelId"
+                                               asp-route-status="@Model.Status"
+                                               asp-route-searchTerm="@Model.SearchTerm"
+                                               asp-route-page="@(Model.Page + 1)">Next →</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </nav>
+
+                            <span class="text-muted small">
+                                Page <strong>@Model.Page</strong> of <strong>@Model.TotalPages</strong>
+                            </span>
                         </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
         }
         else
         {
-            <div class="p-8 text-center">
-                <div class="text-slate-400 text-6xl mb-4">📋</div>
-                <h3 class="text-xl font-bold text-slate-700 mb-2">No projects found</h3>
-                <p class="text-slate-500">Try adjusting your filters or create a new project</p>
+            <div class="card shadow-sm">
+                <div class="card-body text-center py-5">
+                    <div class="display-1 text-muted mb-3">📋</div>
+                    <h3 class="fw-bold">No projects found</h3>
+                    <p class="text-muted">Try adjusting your filters or create a new project</p>
+                </div>
             </div>
         }
     </div>
 
     <!-- Kanban View -->
-    <div id="kanbanView" class="hidden">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div id="kanbanView" class="d-none">
+        <div class="row g-4">
             <!-- Pending Column -->
-            <div class="bg-yellow-50 rounded-2xl p-4">
-                <h3 class="text-xl font-black text-yellow-700 uppercase mb-4">
-                    Pending (@Model.Projects.Count(p => p.Status == SalesTracker.Core.Models.ProjectStatus.Pending))
-                </h3>
-                <div class="space-y-4">
-                    @foreach (var project in Model.Projects.Where(p => p.Status == SalesTracker.Core.Models.ProjectStatus.Pending))
-                    {
-                        <div class="bg-white rounded-xl shadow p-4">
-                            <div class="font-bold text-slate-900 mb-2">@project.Customer</div>
-                            <div class="text-sm text-slate-600 mb-2">@project.CategoryName</div>
-                            <div class="text-lg font-black text-blue-900">€@project.Amount.ToString("N0")</div>
-                            <div class="text-xs text-slate-500 mt-2">@project.Date.ToString("dd/MM/yyyy")</div>
-                            <div class="flex gap-2 mt-3">
-                                <a asp-action="Edit" asp-route-id="@project.Id" class="text-xs text-blue-600 hover:underline font-bold">Edit</a>
+            <div class="col-lg-4">
+                <div class="card bg-warning bg-opacity-10 border-warning">
+                    <div class="card-header bg-warning text-dark fw-black">
+                        PENDING (@Model.Projects.Count(p => p.Status == SalesTracker.Core.Models.ProjectStatus.Pending))
+                    </div>
+                    <div class="card-body">
+                        @foreach (var project in Model.Projects.Where(p => p.Status == SalesTracker.Core.Models.ProjectStatus.Pending))
+                        {
+                            <div class="card mb-3 shadow-sm">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold">@project.Customer</h6>
+                                    <p class="card-text small text-muted mb-2">@project.CategoryName</p>
+                                    <p class="card-text fw-black text-primary">€@project.Amount.ToString("N0")</p>
+                                    <p class="card-text small text-muted">@project.Date.ToString("dd/MM/yyyy")</p>
+                                    <a asp-action="Edit" asp-route-id="@project.Id" class="btn btn-sm btn-primary">Edit</a>
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
             </div>
 
             <!-- Won Column -->
-            <div class="bg-green-50 rounded-2xl p-4">
-                <h3 class="text-xl font-black text-green-700 uppercase mb-4">
-                    Won (@Model.Projects.Count(p => p.Status == SalesTracker.Core.Models.ProjectStatus.Won))
-                </h3>
-                <div class="space-y-4">
-                    @foreach (var project in Model.Projects.Where(p => p.Status == SalesTracker.Core.Models.ProjectStatus.Won))
-                    {
-                        <div class="bg-white rounded-xl shadow p-4">
-                            <div class="font-bold text-slate-900 mb-2">@project.Customer</div>
-                            <div class="text-sm text-slate-600 mb-2">@project.CategoryName</div>
-                            <div class="text-lg font-black text-green-600">€@((project.FinalInvoiceAmount ?? project.Amount).ToString("N0"))</div>
-                            <div class="text-xs text-slate-500 mt-2">@project.Date.ToString("dd/MM/yyyy")</div>
-                            <div class="flex gap-2 mt-3">
-                                <a asp-action="Edit" asp-route-id="@project.Id" class="text-xs text-blue-600 hover:underline font-bold">Edit</a>
+            <div class="col-lg-4">
+                <div class="card bg-success bg-opacity-10 border-success">
+                    <div class="card-header bg-success text-white fw-black">
+                        WON (@Model.Projects.Count(p => p.Status == SalesTracker.Core.Models.ProjectStatus.Won))
+                    </div>
+                    <div class="card-body">
+                        @foreach (var project in Model.Projects.Where(p => p.Status == SalesTracker.Core.Models.ProjectStatus.Won))
+                        {
+                            <div class="card mb-3 shadow-sm">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold">@project.Customer</h6>
+                                    <p class="card-text small text-muted mb-2">@project.CategoryName</p>
+                                    <p class="card-text fw-black text-success">€@((project.FinalInvoiceAmount ?? project.Amount).ToString("N0"))</p>
+                                    <p class="card-text small text-muted">@project.Date.ToString("dd/MM/yyyy")</p>
+                                    <a asp-action="Edit" asp-route-id="@project.Id" class="btn btn-sm btn-primary">Edit</a>
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
             </div>
 
             <!-- Lost Column -->
-            <div class="bg-red-50 rounded-2xl p-4">
-                <h3 class="text-xl font-black text-red-700 uppercase mb-4">
-                    Lost (@Model.Projects.Count(p => p.Status == SalesTracker.Core.Models.ProjectStatus.Lost))
-                </h3>
-                <div class="space-y-4">
-                    @foreach (var project in Model.Projects.Where(p => p.Status == SalesTracker.Core.Models.ProjectStatus.Lost))
-                    {
-                        <div class="bg-white rounded-xl shadow p-4">
-                            <div class="font-bold text-slate-900 mb-2">@project.Customer</div>
-                            <div class="text-sm text-slate-600 mb-2">@project.CategoryName</div>
-                            <div class="text-lg font-black text-red-600">€@project.Amount.ToString("N0")</div>
-                            <div class="text-xs text-slate-500 mt-2">@project.Date.ToString("dd/MM/yyyy")</div>
-                            @if (!string.IsNullOrEmpty(project.LostReason))
-                            {
-                                <div class="text-xs text-red-600 mt-2">Reason: @project.LostReason</div>
-                            }
-                            <div class="flex gap-2 mt-3">
-                                <a asp-action="Edit" asp-route-id="@project.Id" class="text-xs text-blue-600 hover:underline font-bold">Edit</a>
+            <div class="col-lg-4">
+                <div class="card bg-danger bg-opacity-10 border-danger">
+                    <div class="card-header bg-danger text-white fw-black">
+                        LOST (@Model.Projects.Count(p => p.Status == SalesTracker.Core.Models.ProjectStatus.Lost))
+                    </div>
+                    <div class="card-body">
+                        @foreach (var project in Model.Projects.Where(p => p.Status == SalesTracker.Core.Models.ProjectStatus.Lost))
+                        {
+                            <div class="card mb-3 shadow-sm">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold">@project.Customer</h6>
+                                    <p class="card-text small text-muted mb-2">@project.CategoryName</p>
+                                    <p class="card-text fw-black text-danger">€@project.Amount.ToString("N0")</p>
+                                    <p class="card-text small text-muted">@project.Date.ToString("dd/MM/yyyy")</p>
+                                    @if (!string.IsNullOrEmpty(project.LostReason))
+                                    {
+                                        <p class="card-text small text-danger">Reason: @project.LostReason</p>
+                                    }
+                                    <a asp-action="Edit" asp-route-id="@project.Id" class="btn btn-sm btn-primary">Edit</a>
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- Pagination for Kanban -->
-        @if (Model.TotalPages > 1)
-        {
-            <div class="mt-6 flex justify-center">
-                <div class="bg-white rounded-xl shadow-lg p-4 flex gap-2">
-                    @if (Model.Page > 1)
-                    {
-                        <a asp-action="Index"
-                           asp-route-year="@Model.Year"
-                           asp-route-categoryId="@Model.CategoryId"
-                           asp-route-leadChannelId="@Model.LeadChannelId"
-                           asp-route-status="@Model.Status"
-                           asp-route-searchTerm="@Model.SearchTerm"
-                           asp-route-page="@(Model.Page - 1)"
-                           class="px-3 py-2 bg-blue-900 text-white rounded-lg font-bold hover:bg-blue-800">
-                            ← Prev
-                        </a>
-                    }
-
-                    <span class="px-3 py-2 font-bold">
-                        Page @Model.Page of @Model.TotalPages
-                    </span>
-
-                    @if (Model.Page < Model.TotalPages)
-                    {
-                        <a asp-action="Index"
-                           asp-route-year="@Model.Year"
-                           asp-route-categoryId="@Model.CategoryId"
-                           asp-route-leadChannelId="@Model.LeadChannelId"
-                           asp-route-status="@Model.Status"
-                           asp-route-searchTerm="@Model.SearchTerm"
-                           asp-route-page="@(Model.Page + 1)"
-                           class="px-3 py-2 bg-blue-900 text-white rounded-lg font-bold hover:bg-blue-800">
-                            Next →
-                        </a>
-                    }
-                </div>
-            </div>
-        }
     </div>
 </div>
 
@@ -445,19 +317,19 @@
             const btnKanban = document.getElementById('btn-kanban');
 
             if (view === 'table') {
-                tableView.classList.remove('hidden');
-                kanbanView.classList.add('hidden');
-                btnTable.classList.add('bg-blue-900', 'text-white');
-                btnTable.classList.remove('text-slate-700', 'hover:bg-slate-100');
-                btnKanban.classList.remove('bg-blue-900', 'text-white');
-                btnKanban.classList.add('text-slate-700', 'hover:bg-slate-100');
+                tableView.classList.remove('d-none');
+                kanbanView.classList.add('d-none');
+                btnTable.classList.remove('btn-outline-primary');
+                btnTable.classList.add('btn-primary');
+                btnKanban.classList.remove('btn-primary');
+                btnKanban.classList.add('btn-outline-primary');
             } else {
-                tableView.classList.add('hidden');
-                kanbanView.classList.remove('hidden');
-                btnKanban.classList.add('bg-blue-900', 'text-white');
-                btnKanban.classList.remove('text-slate-700', 'hover:bg-slate-100');
-                btnTable.classList.remove('bg-blue-900', 'text-white');
-                btnTable.classList.add('text-slate-700', 'hover:bg-slate-100');
+                tableView.classList.add('d-none');
+                kanbanView.classList.remove('d-none');
+                btnKanban.classList.remove('btn-outline-primary');
+                btnKanban.classList.add('btn-primary');
+                btnTable.classList.remove('btn-primary');
+                btnTable.classList.add('btn-outline-primary');
             }
         }
     </script>

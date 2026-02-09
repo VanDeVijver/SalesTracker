@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SalesTracker.Core.Entities;
 using SalesTracker.Core.Interfaces;
+using SalesTracker.Core.Models;
 using SalesTracker.Web.ViewModels;
 
 namespace SalesTracker.Web.Controllers
@@ -137,7 +138,21 @@ namespace SalesTracker.Web.Controllers
                     FinalInvoiceAmount = model.FinalInvoiceAmount,
                     EndDate = model.EndDate,
                     LostReason = model.LostReason,
-                    Notes = model.Notes
+                    Notes = model.Notes,
+                     CheckCafca = model.CheckCafca,
+                    CheckFolder = model.CheckFolder,
+                    CheckMaterial = model.CheckMaterial,
+                    CheckPlanning = model.CheckPlanning,
+                    // NEW: Initialize log
+                    LogEntries = new List<ProjectLogEntry>
+                    {
+                        new ProjectLogEntry
+                        {
+                            Timestamp = DateTime.UtcNow,
+                            Message = "Project created",
+                            UserName = User.Identity?.Name ?? "System"
+                        }
+                    }
                 };
 
                 await _projectService.CreateProjectAsync(project);
@@ -174,7 +189,13 @@ namespace SalesTracker.Web.Controllers
                 FinalInvoiceAmount = project.FinalInvoiceAmount,
                 EndDate = project.EndDate,
                 LostReason = project.LostReason,
-                Notes = project.Notes
+                Notes = project.Notes,
+                CheckCafca = project.CheckCafca,
+                CheckFolder = project.CheckFolder,
+                CheckMaterial = project.CheckMaterial,
+                CheckPlanning = project.CheckPlanning,
+                // NEW: Log entries
+                LogEntries = project.LogEntries
             };
 
             await PopulateDropdowns();
@@ -184,13 +205,29 @@ namespace SalesTracker.Web.Controllers
         // POST: Projects/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProjectViewModel model)
+        public async Task<IActionResult> Edit(int id, ProjectViewModel model, string? newLogEntry)
         {
             if (id != model.Id)
                 return NotFound();
 
             if (ModelState.IsValid)
             {
+                var existingProject = await _projectService.GetProjectByIdAsync(id);
+                if (existingProject == null)
+                    return NotFound();
+                var logEntries = existingProject.LogEntries;
+
+                // Add new log entry if provided
+                if (!string.IsNullOrWhiteSpace(newLogEntry))
+                {
+                    logEntries.Insert(0, new ProjectLogEntry
+                    {
+                        Timestamp = DateTime.UtcNow,
+                        Message = newLogEntry,
+                        UserName = User.Identity?.Name ?? "System"
+                    });
+                }
+
                 var project = new Project
                 {
                     Id = model.Id,
@@ -209,7 +246,13 @@ namespace SalesTracker.Web.Controllers
                     FinalInvoiceAmount = model.FinalInvoiceAmount,
                     EndDate = model.EndDate,
                     LostReason = model.LostReason,
-                    Notes = model.Notes
+                    Notes = model.Notes,
+                    CheckCafca = model.CheckCafca,
+                    CheckFolder = model.CheckFolder,
+                    CheckMaterial = model.CheckMaterial,
+                    CheckPlanning = model.CheckPlanning,
+                    // NEW: Updated log
+                    LogEntries = logEntries
                 };
 
                 await _projectService.UpdateProjectAsync(project);

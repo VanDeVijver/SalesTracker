@@ -4,103 +4,119 @@
 @inject UserManager<ApplicationUser> UserManager
 
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="nl" data-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SalesTracker</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Theme CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-800 font-sans text-sm">
+<body>
 
     @if (SignInManager.IsSignedIn(User))
     {
-        <nav class="bg-blue-900 text-white p-4 shadow-xl sticky top-0 z-50">
-            <div class="container mx-auto flex flex-col md:flex-row justify-between items-center text-[10px] font-black uppercase">
-                <div class="flex items-center gap-3">
-                    <div class="bg-yellow-400 text-blue-900 p-2 rounded italic text-lg tracking-tighter">VE</div>
-                    <h1 class="text-xl">VENERGY <span class="text-yellow-400">CRM v14.17</span></h1>
-                </div>
-                <div class="flex gap-4 md:gap-6 items-center">
-                    <a asp-controller="Home" asp-action="Index" class="hover:text-yellow-400 transition">📊 Dashboard</a>
-                    <a asp-controller="Projects" asp-action="Index" class="hover:text-yellow-400 transition">📋 Projects</a>
-
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <div class="flex gap-3 border-l pl-4 border-blue-700">
-                            <a asp-controller="Account" asp-action="UserManagement" class="text-purple-400 hover:text-purple-300">👥 Users</a>
-                        </div>
-                    }
-
-                    <div class="flex gap-3 border-l pl-4 border-blue-700 items-center">
-                        <span class="text-yellow-400">@User.Identity?.Name</span>
-                        <form asp-controller="Account" asp-action="Logout" method="post" class="inline">
-                            <button type="submit" class="text-red-400 hover:text-red-300">Logout</button>
-                        </form>
-                    </div>
+        <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+            <div class="container-fluid">
+                <a class="navbar-brand py-0" asp-controller="Home" asp-action="Index">
+                    <svg fill="#fff" viewBox="0 0 1857 482" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <polygon points="469.9818 0.0003 354.0308 237.8023 466.2358 237.8023 580.2008 0.0003"></polygon>
+                        <polygon points="235.5048 0.0048 349.1128 233.9588 405.2178 118.8938 347.7308 0.0048"></polygon>
+                        <polygon points="229.2344 237.7806 117.0084 237.7806 230.5874 3.8496 286.7204 119.4276"></polygon>
+                        <polygon points="0 0.0129 112.101 233.9229 168.065 118.6399 110.213 0.0129"></polygon>
+                        <polygon points="229.2248 244.0795 117.0168 244.0795 231.0888 478.0415 286.7188 362.9905"></polygon>
+                        <polygon points="350.9775 244.0794 236.0125 481.8904 347.2405 481.8904 463.1895 244.0794"></polygon>
+                        <g class="logo-text">
+                            <path d="M569.8179,203.7885 L611.9419,203.7885 L646.8599,318.5205 C650.7399,331.5455 655.4509,350.1135 655.4509,350.1135 L656.0059,350.1135 C656.0059,350.1135 660.7169,331.2685 664.5969,318.5205 L699.2379,203.7885 L739.9759,203.7885 L673.1879,401.9365 L636.6069,401.9365 L569.8179,203.7885 Z"></path>
+                            <path d="M764.0889,315.4716 L827.2749,315.4716 C826.1659,297.4576 814.2499,284.9876 797.0679,284.9876 C777.1139,284.9876 767.4149,296.9046 764.0889,315.4716 M726.3999,330.7136 C726.3999,288.5896 754.9439,255.8886 796.5129,255.8886 C842.2399,255.8886 866.6269,290.8076 866.6269,341.5226 L763.5349,341.5226 C766.3059,363.4146 778.4999,376.9946 799.8389,376.9946 C814.5269,376.9946 823.1179,370.3436 827.2749,359.5346 L864.4099,359.5346 C859.1449,384.7546 836.6969,406.0936 800.1159,406.0936 C753.0039,406.0936 726.3999,373.1156 726.3999,330.7136"></path>
+                            <path d="M920.3892,282.4931 L921.2212,282.4931 C929.8122,266.4201 939.5112,258.1061 956.1392,258.1061 C960.2962,258.1061 962.7902,258.3831 965.0082,259.2151 L965.0082,292.1931 L964.1762,292.1931 C939.5112,289.6991 921.7752,302.7231 921.7752,332.6541 L921.7752,401.9361 L884.0852,401.9361 L884.0852,259.7681 L920.3892,259.7681 L920.3892,282.4931 Z"></path>
+                            <path d="M981.3574,259.7685 L1017.6624,259.7685 L1017.6624,278.8905 L1018.4934,278.8905 C1026.2534,265.8655 1040.1094,255.8885 1059.7854,255.8885 C1077.7984,255.8885 1092.2104,265.8655 1099.1374,280.8305 L1099.6924,280.8305 C1109.3914,265.3115 1124.3574,255.8885 1142.3704,255.8885 C1172.3004,255.8885 1189.2054,275.2885 1189.2054,306.3265 L1189.2054,401.9365 L1151.5154,401.9365 L1151.5154,312.7005 C1151.5154,296.6265 1143.4784,288.3135 1129.6224,288.3135 C1113.8264,288.3135 1104.1264,300.5065 1104.1264,319.3515 L1104.1264,401.9365 L1066.4364,401.9365 L1066.4364,312.7005 C1066.4364,296.6265 1058.4004,288.3135 1044.5434,288.3135 C1029.3014,288.3135 1019.0474,300.5065 1019.0474,319.3515 L1019.0474,401.9365 L981.3574,401.9365 L981.3574,259.7685 Z"></path>
+                            <path d="M1243.248,315.4716 L1306.434,315.4716 C1305.325,297.4576 1293.408,284.9876 1276.227,284.9876 C1256.273,284.9876 1246.573,296.9046 1243.248,315.4716 M1205.559,330.7136 C1205.559,288.5896 1234.102,255.8886 1275.672,255.8886 C1321.398,255.8886 1345.786,290.8076 1345.786,341.5226 L1242.694,341.5226 C1245.465,363.4146 1257.659,376.9946 1278.998,376.9946 C1293.686,376.9946 1302.277,370.3436 1306.434,359.5346 L1343.569,359.5346 C1338.304,384.7546 1315.856,406.0936 1279.275,406.0936 C1232.163,406.0936 1205.559,373.1156 1205.559,330.7136"></path>
+                            <path d="M1453.0352,401.9364 L1453.0352,385.3084 L1452.2032,385.3084 C1442.5042,398.3334 1431.4192,405.8164 1411.4652,405.8164 C1379.8722,405.8164 1362.1362,385.5854 1362.1362,354.5464 L1362.1362,259.7684 L1399.5492,259.7684 L1399.5492,348.1724 C1399.5492,364.8004 1407.0312,373.9464 1423.1042,373.9464 C1440.8412,373.9464 1451.6492,360.6444 1451.6492,341.7984 L1451.6492,259.7684 L1489.3392,259.7684 L1489.3392,401.9364 L1453.0352,401.9364 Z"></path>
+                            <polygon points="1514.282 401.936 1551.971 401.936 1551.971 203.788 1514.282 203.788"></polygon>
+                            <path d="M1607.6748,315.4716 L1670.8608,315.4716 C1669.7518,297.4576 1657.8358,284.9876 1640.6538,284.9876 C1620.6998,284.9876 1610.9998,296.9046 1607.6748,315.4716 M1569.9858,330.7136 C1569.9858,288.5896 1598.5288,255.8886 1640.0998,255.8886 C1685.8248,255.8886 1710.2128,290.8076 1710.2128,341.5226 L1607.1208,341.5226 C1609.8918,363.4146 1622.0858,376.9946 1643.4248,376.9946 C1658.1128,376.9946 1666.7028,370.3436 1670.8608,359.5346 L1707.9958,359.5346 C1702.7308,384.7546 1680.2828,406.0936 1643.7018,406.0936 C1596.5898,406.0936 1569.9858,373.1156 1569.9858,330.7136"></path>
+                            <path d="M1764.5293,279.1679 L1765.3613,279.1679 C1775.0603,263.9259 1788.0863,255.8889 1807.4843,255.8889 C1836.8603,255.8889 1856.5373,278.0599 1856.5373,309.0979 L1856.5373,401.9369 L1818.8463,401.9369 L1818.8463,314.6409 C1818.8463,299.3979 1809.9783,288.5899 1794.1823,288.5899 C1777.5543,288.5899 1765.3613,301.8929 1765.3613,321.2919 L1765.3613,401.9369 L1727.6713,401.9369 L1727.6713,259.7689 L1764.5293,259.7689 L1764.5293,279.1679 Z"></path>
+                        </g>
+                    </svg>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                📊 Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Projects" asp-action="Index">
+                                📋 Projects
+                            </a>
+                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item border-start ps-3 ms-3" style="border-color: rgba(255,255,255,0.2) !important;">
+                                <a class="nav-link" asp-controller="Account" asp-action="UserManagement">
+                                    👥 Users
+                                </a>
+                            </li>
+                        }
+                        <li class="nav-item border-start ps-3 ms-3" style="border-color: rgba(255,255,255,0.2) !important;">
+                            <span class="nav-link">@User.Identity?.Name</span>
+                        </li>
+                        <li class="nav-item">
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-link nav-link" style="opacity: 0.7;">
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
     }
 
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span id="themeIcon">🌙</span>
+    </button>
+
     <main role="main">
         @if (TempData["Success"] != null)
         {
-            <div class="container mx-auto px-4 mt-4">
-                <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-green-700 font-bold">@TempData["Success"]</p>
-                        </div>
-                    </div>
+            <div class="container mt-4">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>✓ Success!</strong> @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             </div>
         }
 
         @if (TempData["Error"] != null)
         {
-            <div class="container mx-auto px-4 mt-4">
-                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-red-700 font-bold">@TempData["Error"]</p>
-                        </div>
-                    </div>
+            <div class="container mt-4">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>✗ Error!</strong> @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             </div>
         }
 
         @if (TempData["Warning"] != null)
         {
-            <div class="container mx-auto px-4 mt-4">
-                <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-yellow-700 font-bold">@TempData["Warning"]</p>
-                            @if (TempData["Errors"] != null)
-                            {
-                                <div class="mt-2 text-xs text-yellow-600">
-                                    @Html.Raw(TempData["Errors"])
-                                </div>
-                            }
-                        </div>
-                    </div>
+            <div class="container mt-4">
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>⚠ Warning!</strong> @TempData["Warning"]
+                    @if (TempData["Errors"] != null)
+                    {
+                        <div class="mt-2 small">@Html.Raw(TempData["Errors"])</div>
+                    }
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             </div>
         }
@@ -108,7 +124,54 @@
         @RenderBody()
     </main>
 
+    <!-- jQuery -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Site JS -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const html = document.documentElement;
+
+        // Load saved theme from localStorage
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+        updateLogoColor(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+            updateLogoColor(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            themeIcon.textContent = theme === 'light' ? '🌙' : '☀️';
+        }
+
+        function updateLogoColor(theme) {
+            const logo = document.querySelector('.navbar-brand svg');
+            if (logo) {
+                logo.setAttribute('fill', theme === 'light' ? '#ffffff' : '#000000');
+            }
+        }
+    </script>
+
+    <!-- Chart.js Library - MUST BE LOADED BEFORE SCRIPTS SECTION -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Render page-specific scripts -->
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

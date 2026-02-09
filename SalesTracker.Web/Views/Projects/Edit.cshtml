@@ -3,180 +3,113 @@
     ViewData["Title"] = "Edit Project";
 }
 
-<div class="container mx-auto px-4 py-8 max-w-4xl">
-    <div class="mb-8">
-        <h1 class="text-4xl font-black text-blue-900 uppercase">Edit Project</h1>
-        <p class="text-slate-600 mt-2">Update project information</p>
+<div class="container py-4">
+    <div class="mb-4">
+        <h1 class="display-5 fw-black text-primary">EDIT PROJECT</h1>
+        <p class="text-muted">Update project information</p>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-lg p-8">
-        <form asp-action="Edit" method="post">
-            @Html.AntiForgeryToken()
-            <input type="hidden" asp-for="Id" />
-            <div asp-validation-summary="ModelOnly" class="bg-red-50 border-l-4 border-red-500 p-4 mb-6"></div>
+    <div class="card shadow">
+        <div class="card-body p-4">
+            <form asp-action="Edit" method="post" id="editForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" name="newLogEntry" id="newLogEntry" />
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-            <!-- Basic Information -->
-            <div class="mb-8">
-                <h2 class="text-2xl font-black text-blue-900 uppercase mb-4 border-b-2 border-blue-900 pb-2">Basic Information</h2>
+                <!-- ... existing Basic Information section ... -->
+                <!-- ... existing Financial - Quote section ... -->
+                <!-- ... existing Financial - Actual section ... -->
+                <!-- ... existing Additional Information section ... -->
+                <!-- ===== NEW: Project Checklist ===== -->
+                <div class="mb-5">
+                    <h3 class="fw-black text-primary mb-3 pb-2 border-bottom border-primary border-3">PROJECT CHECKLIST</h3>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label asp-for="Date" class="block text-sm font-bold text-slate-700 mb-2 uppercase"></label>
-                        <input asp-for="Date" type="date" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition" />
-                        <span asp-validation-for="Date" class="text-red-500 text-xs mt-1 block"></span>
-                    </div>
-
-                    <div>
-                        <label asp-for="Customer" class="block text-sm font-bold text-slate-700 mb-2 uppercase"></label>
-                        <input asp-for="Customer" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition" placeholder="Customer name" />
-                        <span asp-validation-for="Customer" class="text-red-500 text-xs mt-1 block"></span>
-                    </div>
-
-                    <div>
-                        <label asp-for="ClientType" class="block text-sm font-bold text-slate-700 mb-2 uppercase"></label>
-                        <select asp-for="ClientType" asp-items="Html.GetEnumSelectList<SalesTracker.Core.Models.ClientType>()" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition">
-                        </select>
-                        <span asp-validation-for="ClientType" class="text-red-500 text-xs mt-1 block"></span>
-                    </div>
-
-                    <div>
-                        <label asp-for="CategoryId" class="block text-sm font-bold text-slate-700 mb-2 uppercase">Category</label>
-                        <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition">
-                            <option value="">-- Select Category --</option>
-                        </select>
-                        <span asp-validation-for="CategoryId" class="text-red-500 text-xs mt-1 block"></span>
-                    </div>
-
-                    <div>
-                        <label asp-for="LeadChannelId" class="block text-sm font-bold text-slate-700 mb-2 uppercase">Lead Channel</label>
-                        <select asp-for="LeadChannelId" asp-items="ViewBag.LeadChannels" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition">
-                            <option value="">-- Select Lead Channel --</option>
-                        </select>
-                        <span asp-validation-for="LeadChannelId" class="text-red-500 text-xs mt-1 block"></span>
-                    </div>
-
-                    <div>
-                        <label asp-for="Status" class="block text-sm font-bold text-slate-700 mb-2 uppercase"></label>
-                        <select asp-for="Status" asp-items="Html.GetEnumSelectList<SalesTracker.Core.Models.ProjectStatus>()" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition">
-                        </select>
-                        <span asp-validation-for="Status" class="text-red-500 text-xs mt-1 block"></span>
+                    <div class="card bg-light border-2">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <div class="form-check">
+                                        <input asp-for="CheckCafca" type="checkbox" class="form-check-input" id="checkCafca" />
+                                        <label asp-for="CheckCafca" class="form-check-label fw-bold">In CafCa</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-check">
+                                        <input asp-for="CheckFolder" type="checkbox" class="form-check-input" id="checkFolder" />
+                                        <label asp-for="CheckFolder" class="form-check-label fw-bold">Mapje (Folder)</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-check">
+                                        <input asp-for="CheckMaterial" type="checkbox" class="form-check-input" id="checkMaterial" />
+                                        <label asp-for="CheckMaterial" class="form-check-label fw-bold">Materiaal (Material)</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-check">
+                                        <input asp-for="CheckPlanning" type="checkbox" class="form-check-input" id="checkPlanning" />
+                                        <label asp-for="CheckPlanning" class="form-check-label fw-bold">Planning</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Financial Information - Quote -->
-            <div class="mb-8">
-                <h2 class="text-2xl font-black text-blue-900 uppercase mb-4 border-b-2 border-blue-900 pb-2">Financial - Quote (Offerte)</h2>
+                <!-- ===== NEW: Project Log ===== -->
+                <div class="mb-4">
+                    <h3 class="fw-black text-primary mb-3 pb-2 border-bottom border-primary border-3">PROJECT LOG (CHRONOLOGISCH)</h3>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label asp-for="Amount" class="block text-sm font-bold text-slate-700 mb-2 uppercase"></label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-3 text-slate-500 font-bold">€</span>
-                            <input asp-for="Amount" type="number" step="0.01" class="w-full pl-8 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition" placeholder="0.00" />
+                    <div class="card border-2 border-dashed">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <input type="text" id="logEntryInput" class="form-control" placeholder="Typ hier een nieuwe update..." />
+                                    <button type="button" onclick="addLogEntry()" class="btn btn-primary fw-bold text-uppercase">
+                                        Log toevoegen
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="logHistory" class="border rounded p-3" style="max-height: 300px; overflow-y: auto; background-color: var(--bg-lighter);">
+                                @if (Model.LogEntries != null && Model.LogEntries.Any())
+                                {
+                                    foreach (var entry in Model.LogEntries.OrderByDescending(e => e.Timestamp))
+                                    {
+                                        <div class="mb-2 pb-2 border-bottom">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div class="flex-grow-1">
+                                                    <p class="mb-1 fw-semibold">@entry.Message</p>
+                                                    <small class="text-muted">
+                                                        <span class="fw-bold">@entry.UserName</span> •
+                                                        @entry.Timestamp.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="text-muted text-center mb-0">Geen log entries nog</p>
+                                }
+                            </div>
                         </div>
-                        <span asp-validation-for="Amount" class="text-red-500 text-xs mt-1 block"></span>
-                    </div>
-
-                    <div>
-                        <label asp-for="Purchase" class="block text-sm font-bold text-slate-700 mb-2 uppercase"></label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-3 text-slate-500 font-bold">€</span>
-                            <input asp-for="Purchase" type="number" step="0.01" class="w-full pl-8 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition" placeholder="0.00" />
-                        </div>
-                        <span asp-validation-for="Purchase" class="text-red-500 text-xs mt-1 block"></span>
-                    </div>
-
-                    <div>
-                        <label asp-for="ManualMarginPercentage" class="block text-sm font-bold text-slate-700 mb-2 uppercase"></label>
-                        <div class="relative">
-                            <input asp-for="ManualMarginPercentage" type="number" step="0.01" min="0" max="100" class="w-full pr-12 pl-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition" placeholder="0.00" />
-                            <span class="absolute right-4 top-3 text-slate-500 font-bold">%</span>
-                        </div>
-                        <span asp-validation-for="ManualMarginPercentage" class="text-red-500 text-xs mt-1 block"></span>
-                        <div class="text-xs text-slate-500 mt-1">
-                            Calculated: €<span id="calculatedManualMargin">0.00</span>
-                        </div>
-                    </div>
-
-
-                    <div>
-                        <label asp-for="Hours" class="block text-sm font-bold text-slate-700 mb-2 uppercase"></label>
-                        <input asp-for="Hours" type="number" step="0.01" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition" placeholder="0.00" />
-                        <span asp-validation-for="Hours" class="text-red-500 text-xs mt-1 block"></span>
                     </div>
                 </div>
-            </div>
 
-            <!-- Financial Information - Actual -->
-            <div class="mb-8">
-                <h2 class="text-2xl font-black text-blue-900 uppercase mb-4 border-b-2 border-blue-900 pb-2">Financial - Actual (Cafca/Nacalculatie)</h2>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label asp-for="CafcaMarginPercentage" class="block text-sm font-bold text-slate-700 mb-2 uppercase"></label>
-                        <div class="relative">
-                            <input asp-for="CafcaMarginPercentage" type="number" step="0.01" min="0" max="100" class="w-full pr-12 pl-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition" placeholder="0.00" />
-                            <span class="absolute right-4 top-3 text-slate-500 font-bold">%</span>
-                        </div>
-                        <span asp-validation-for="CafcaMarginPercentage" class="text-red-500 text-xs mt-1 block"></span>
-                        <div class="text-xs text-slate-500 mt-1">
-                            Calculated: €<span id="calculatedCafcaMargin">0.00</span>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label asp-for="CafcaHours" class="block text-sm font-bold text-slate-700 mb-2 uppercase"></label>
-                        <input asp-for="CafcaHours" type="number" step="0.01" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition" placeholder="0.00" />
-                        <span asp-validation-for="CafcaHours" class="text-red-500 text-xs mt-1 block"></span>
-                    </div>
-
-                    <div>
-                        <label asp-for="FinalInvoiceAmount" class="block text-sm font-bold text-slate-700 mb-2 uppercase"></label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-3 text-slate-500 font-bold">€</span>
-                            <input asp-for="FinalInvoiceAmount" type="number" step="0.01" class="w-full pl-8 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition" placeholder="0.00" />
-                        </div>
-                        <span asp-validation-for="FinalInvoiceAmount" class="text-red-500 text-xs mt-1 block"></span>
-                    </div>
-
-                    <div>
-                        <label asp-for="EndDate" class="block text-sm font-bold text-slate-700 mb-2 uppercase"></label>
-                        <input asp-for="EndDate" type="date" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition" />
-                        <span asp-validation-for="EndDate" class="text-red-500 text-xs mt-1 block"></span>
-                    </div>
+                <!-- Action Buttons -->
+                <div class="d-flex gap-3 justify-content-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-lg fw-black text-uppercase px-5">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg fw-black text-uppercase px-5">
+                        Update Project
+                    </button>
                 </div>
-            </div>
-
-            <!-- Additional Information -->
-            <div class="mb-8">
-                <h2 class="text-2xl font-black text-blue-900 uppercase mb-4 border-b-2 border-blue-900 pb-2">Additional Information</h2>
-
-                <div class="space-y-6">
-                    <div>
-                        <label asp-for="LostReason" class="block text-sm font-bold text-slate-700 mb-2 uppercase"></label>
-                        <input asp-for="LostReason" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition" placeholder="Reason for losing the project (if applicable)" />
-                        <span asp-validation-for="LostReason" class="text-red-500 text-xs mt-1 block"></span>
-                    </div>
-
-                    <div>
-                        <label asp-for="Notes" class="block text-sm font-bold text-slate-700 mb-2 uppercase"></label>
-                        <textarea asp-for="Notes" rows="4" class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none transition" placeholder="Additional notes..."></textarea>
-                        <span asp-validation-for="Notes" class="text-red-500 text-xs mt-1 block"></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex gap-4 justify-end">
-                <a asp-action="Index" class="px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl font-black uppercase hover:bg-slate-50 transition">
-                    Cancel
-                </a>
-                <button type="submit" class="px-6 py-3 bg-blue-900 text-white rounded-xl font-black uppercase hover:bg-blue-800 transition">
-                    Update Project
-                </button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -209,5 +142,30 @@
         // Calculate on page load
         calculateManualMargin();
         calculateCafcaMargin();
+
+        // ===== NEW: Log Entry Functionality =====
+        function addLogEntry() {
+            const input = document.getElementById('logEntryInput');
+            const message = input.value.trim();
+
+            if (!message) {
+                alert('Please enter a log message');
+                return;
+            }
+
+            // Set the hidden field value
+            document.getElementById('newLogEntry').value = message;
+
+            // Submit the form
+            document.getElementById('editForm').submit();
+        }
+
+        // Allow Enter key to add log entry
+        document.getElementById('logEntryInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addLogEntry();
+            }
+        });
     </script>
 }
