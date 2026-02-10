@@ -1,25 +1,25 @@
 /* ============================================
-   CSS VARIABLES - BLACK & WHITE THEME SYSTEM
+   CSS VARIABLES - PURE BLACK & WHITE SYSTEM
    ============================================ */
 
 :root {
-    /* Light Theme (Default) */
+    /* Light Theme (Default) - Pure B&W */
     --bg-primary: #ffffff;
-    --bg-secondary: #f8f9fa;
-    --bg-tertiary: #e9ecef;
+    --bg-secondary: #f5f5f5;
+    --bg-tertiary: #e8e8e8;
     --text-primary: #000000;
-    --text-secondary: #495057;
-    --text-tertiary: #6c757d;
-    --border-color: #dee2e6;
+    --text-secondary: #333333;
+    --text-tertiary: #666666;
+    --border-color: #d0d0d0;
     --shadow-color: rgba(0, 0, 0, 0.1);
-    /* Accent Colors (Always Black/White) */
+    /* Accent Colors (Pure Black/White) */
     --accent-primary: #000000;
     --accent-secondary: #ffffff;
-    /* Status Colors (Grayscale) */
-    --status-success: #2d3748;
-    --status-warning: #4a5568;
-    --status-danger: #1a202c;
-    --status-info: #718096;
+    /* Status Colors (Pure Grayscale) */
+    --status-success: #000000;
+    --status-warning: #4a4a4a;
+    --status-danger: #1a1a1a;
+    --status-info: #808080;
     /* Spacing Scale */
     --space-xs: 8px;
     --space-sm: 16px;
@@ -54,22 +54,22 @@
     --transition-slow: 0.5s ease;
 }
 
-/* Dark Theme */
+/* Dark Theme - Inverted B&W */
 [data-theme="dark"] {
     --bg-primary: #000000;
     --bg-secondary: #1a1a1a;
     --bg-tertiary: #2d2d2d;
     --text-primary: #ffffff;
-    --text-secondary: #e0e0e0;
-    --text-tertiary: #a0a0a0;
+    --text-secondary: #cccccc;
+    --text-tertiary: #999999;
     --border-color: #404040;
     --shadow-color: rgba(255, 255, 255, 0.1);
     --accent-primary: #ffffff;
     --accent-secondary: #000000;
-    --status-success: #e2e8f0;
-    --status-warning: #cbd5e0;
-    --status-danger: #f7fafc;
-    --status-info: #a0aec0;
+    --status-success: #ffffff;
+    --status-warning: #b5b5b5;
+    --status-danger: #e5e5e5;
+    --status-info: #7f7f7f;
 }
 
 /* ============================================
@@ -128,11 +128,6 @@ body {
     transition: all var(--transition-base);
     z-index: 1000;
 }
-
-    .theme-toggle:hover {
-        transform: scale(1.1) rotate(15deg);
-        box-shadow: var(--shadow-xl);
-    }
 
     .theme-toggle:active {
         transform: scale(0.95);
@@ -206,7 +201,7 @@ p {
 }
 
 /* ============================================
-   BOOTSTRAP OVERRIDES - COLORS
+   BOOTSTRAP OVERRIDES - MONOCHROME
    ============================================ */
 
 .bg-primary {
@@ -216,15 +211,38 @@ p {
 
 .bg-secondary {
     background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
 }
 
 .bg-light {
     background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
 }
 
 .bg-dark {
     background-color: var(--accent-primary) !important;
     color: var(--accent-secondary) !important;
+}
+
+/* Override Bootstrap colored backgrounds to B&W */
+.bg-success {
+    background-color: var(--accent-primary) !important;
+    color: var(--accent-secondary) !important;
+}
+
+.bg-warning {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+}
+
+.bg-danger {
+    background-color: var(--text-primary) !important;
+    color: var(--accent-secondary) !important;
+}
+
+.bg-info {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
 }
 
 .text-primary {
@@ -239,6 +257,31 @@ p {
     color: var(--text-tertiary) !important;
 }
 
+/* Override Bootstrap text colors to B&W */
+.text-success {
+    color: var(--text-primary) !important;
+}
+
+.text-warning {
+    color: var(--text-secondary) !important;
+}
+
+.text-danger {
+    color: var(--text-primary) !important;
+}
+
+.text-info {
+    color: var(--text-secondary) !important;
+}
+
+.text-white {
+    color: #ffffff !important;
+}
+
+.text-dark {
+    color: #000000 !important;
+}
+
 .border-primary {
     border-color: var(--accent-primary) !important;
 }
@@ -247,8 +290,24 @@ p {
     border-color: var(--border-color) !important;
 }
 
+.border-success {
+    border-color: var(--accent-primary) !important;
+}
+
+.border-warning {
+    border-color: var(--text-tertiary) !important;
+}
+
+.border-danger {
+    border-color: var(--text-primary) !important;
+}
+
+.border-info {
+    border-color: var(--border-color) !important;
+}
+
 /* ============================================
-   BUTTONS - MINIMALIST BLACK & WHITE
+   BUTTONS - PURE BLACK & WHITE
    ============================================ */
 
 .btn {
@@ -275,40 +334,25 @@ p {
         box-shadow: none;
     }
 
-/* Primary Button (Black on Light, White on Dark) */
+/* Primary Button */
 .btn-primary {
     background-color: var(--accent-primary);
     color: var(--accent-secondary);
     border-color: var(--accent-primary);
 }
 
-    .btn-primary:hover {
-        background-color: var(--accent-secondary);
-        color: var(--accent-primary);
-        border-color: var(--accent-primary);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-    }
-
     .btn-primary:active {
         transform: translateY(0);
     }
 
-/* Secondary Button (Outlined) */
+/* Secondary Button */
 .btn-secondary,
-.btn-outline-primary {
+.btn-outline-primary,
+.btn-outline-secondary {
     background-color: transparent;
     color: var(--accent-primary);
     border-color: var(--accent-primary);
 }
-
-    .btn-secondary:hover,
-    .btn-outline-primary:hover {
-        background-color: var(--accent-primary);
-        color: var(--accent-secondary);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-    }
 
 /* Light Button */
 .btn-light {
@@ -317,13 +361,6 @@ p {
     border-color: var(--border-color);
 }
 
-    .btn-light:hover {
-        background-color: var(--bg-tertiary);
-        color: var(--text-primary);
-        border-color: var(--text-primary);
-        transform: translateY(-2px);
-    }
-
 /* Dark Button */
 .btn-dark {
     background-color: var(--accent-primary);
@@ -331,53 +368,55 @@ p {
     border-color: var(--accent-primary);
 }
 
-    .btn-dark:hover {
-        background-color: var(--accent-secondary);
-        color: var(--accent-primary);
-        border-color: var(--accent-primary);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-    }
-
-/* Success/Warning/Danger Buttons (Grayscale) */
+/* Success/Warning/Danger Buttons - All Monochrome */
 .btn-success {
-    background-color: var(--status-success);
+    background-color: var(--accent-primary);
     color: var(--accent-secondary);
-    border-color: var(--status-success);
+    border-color: var(--accent-primary);
 }
-
-    .btn-success:hover {
-        background-color: var(--accent-secondary);
-        color: var(--status-success);
-        border-color: var(--status-success);
-        transform: translateY(-2px);
-    }
 
 .btn-warning {
-    background-color: var(--status-warning);
-    color: var(--accent-secondary);
-    border-color: var(--status-warning);
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--text-tertiary);
 }
-
-    .btn-warning:hover {
-        background-color: var(--accent-secondary);
-        color: var(--status-warning);
-        border-color: var(--status-warning);
-        transform: translateY(-2px);
-    }
 
 .btn-danger {
-    background-color: var(--status-danger);
+    background-color: var(--text-primary);
     color: var(--accent-secondary);
-    border-color: var(--status-danger);
+    border-color: var(--text-primary);
 }
 
-    .btn-danger:hover {
-        background-color: var(--accent-secondary);
-        color: var(--status-danger);
-        border-color: var(--status-danger);
-        transform: translateY(-2px);
-    }
+.btn-info {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+/* Outline variants */
+.btn-outline-success {
+    background-color: transparent;
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+}
+
+.btn-outline-warning {
+    background-color: transparent;
+    color: var(--text-secondary);
+    border-color: var(--text-secondary);
+}
+
+.btn-outline-danger {
+    background-color: transparent;
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+}
+
+.btn-outline-info {
+    background-color: transparent;
+    color: var(--text-secondary);
+    border-color: var(--text-secondary);
+}
 
 /* Button Sizes */
 .btn-sm {
@@ -391,11 +430,11 @@ p {
 }
 
 /* ============================================
-   CARDS - MINIMALIST DESIGN
+   CARDS - PURE MONOCHROME
    ============================================ */
 
 .card {
-    border: 1px solid var(--border-color);
+    border: 2px solid var(--border-color);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
     transition: all var(--transition-base);
@@ -403,18 +442,12 @@ p {
     background-color: var(--bg-primary);
 }
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--accent-primary);
-    }
-
 .card-header {
-    background-color: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-color);
+    background-color: var(--accent-primary);
+    border-bottom: 2px solid var(--accent-primary);
     padding: 1.5rem;
-    font-weight: var(--font-weight-semibold);
-    color: var(--text-primary);
+    font-weight: var(--font-weight-bold);
+    color: var(--accent-secondary);
 }
 
 .card-body {
@@ -424,18 +457,14 @@ p {
 
 .card-footer {
     background-color: var(--bg-secondary);
-    border-top: 1px solid var(--border-color);
+    border-top: 2px solid var(--border-color);
     padding: 1.5rem;
 }
 
-/* Card Variants */
+/* Card Variants - All Monochrome */
 .card-elevated {
     box-shadow: var(--shadow-md);
 }
-
-    .card-elevated:hover {
-        box-shadow: var(--shadow-xl);
-    }
 
 .card-dark {
     background-color: var(--accent-primary);
@@ -449,6 +478,22 @@ p {
         border-color: rgba(255, 255, 255, 0.1);
     }
 
+/* Override colored card headers */
+.card-header.bg-success,
+.card-header.bg-warning,
+.card-header.bg-danger,
+.card-header.bg-info {
+    background-color: var(--accent-primary) !important;
+    color: var(--accent-secondary) !important;
+    border-bottom: 2px solid var(--accent-primary);
+}
+
+.card-header.bg-secondary {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+    border-bottom: 2px solid var(--border-color);
+}
+
 /* ============================================
    NAVIGATION - MINIMALIST NAVBAR
    ============================================ */
@@ -457,7 +502,7 @@ p {
     padding: 1rem 0;
     background-color: var(--accent-primary);
     color: var(--accent-secondary);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 2px solid var(--accent-primary);
     box-shadow: var(--shadow-sm);
     transition: all var(--transition-base);
 }
@@ -472,10 +517,6 @@ p {
     transition: all var(--transition-fast);
 }
 
-    .navbar-brand:hover {
-        opacity: 0.8;
-    }
-
 .navbar-nav .nav-link {
     color: var(--accent-secondary) !important;
     font-weight: var(--font-weight-medium);
@@ -488,7 +529,6 @@ p {
     opacity: 0.85;
 }
 
-    .navbar-nav .nav-link:hover,
     .navbar-nav .nav-link.active {
         opacity: 1;
     }
@@ -505,7 +545,6 @@ p {
         transition: width var(--transition-base);
     }
 
-    .navbar-nav .nav-link:hover::after,
     .navbar-nav .nav-link.active::after {
         width: 80%;
     }
@@ -517,12 +556,6 @@ p {
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
-/* Hover effect */
-.navbar-brand:hover svg {
-    opacity: 0.85;
-    transform: scale(1.02);
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
-}
 /* Theme-aware logo colors */
 [data-theme="light"] .navbar-brand svg {
     fill: #ffffff;
@@ -531,6 +564,7 @@ p {
 [data-theme="dark"] .navbar-brand svg {
     fill: #000000;
 }
+
 /* Responsive sizing */
 @media (max-width: 992px) {
     .navbar-brand svg {
@@ -594,15 +628,15 @@ p {
 }
 
     .table thead th {
-        background-color: var(--bg-secondary);
-        color: var(--text-primary);
+        background-color: var(--accent-primary);
+        color: var(--accent-secondary);
         font-weight: var(--font-weight-bold);
         font-size: 0.75rem;
         text-transform: uppercase;
         letter-spacing: 1px;
         padding: 1rem;
         border: none;
-        border-bottom: 2px solid var(--border-color);
+        border-bottom: 2px solid var(--accent-primary);
         white-space: nowrap;
     }
 
@@ -618,10 +652,6 @@ p {
         transition: all var(--transition-fast);
     }
 
-        .table tbody tr:hover {
-            background-color: var(--bg-secondary);
-        }
-
         .table tbody tr:last-child td {
             border-bottom: none;
         }
@@ -630,7 +660,7 @@ p {
 .table-dark thead th {
     background-color: var(--accent-primary);
     color: var(--accent-secondary);
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent-primary);
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
@@ -719,7 +749,7 @@ p {
 }
 
 /* ============================================
-   BADGES - MINIMALIST STATUS INDICATORS
+   BADGES - PURE MONOCHROME
    ============================================ */
 
 .badge {
@@ -729,25 +759,25 @@ p {
     text-transform: uppercase;
     letter-spacing: 1px;
     border-radius: var(--radius-md);
-    border: 1px solid transparent;
+    border: 2px solid transparent;
 }
 
     .badge.bg-success {
-        background-color: var(--status-success) !important;
+        background-color: var(--accent-primary) !important;
         color: var(--accent-secondary) !important;
-        border-color: var(--status-success);
+        border-color: var(--accent-primary);
     }
 
     .badge.bg-warning {
-        background-color: var(--status-warning) !important;
-        color: var(--accent-secondary) !important;
-        border-color: var(--status-warning);
+        background-color: var(--bg-tertiary) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--text-tertiary);
     }
 
     .badge.bg-danger {
-        background-color: var(--status-danger) !important;
+        background-color: var(--text-primary) !important;
         color: var(--accent-secondary) !important;
-        border-color: var(--status-danger);
+        border-color: var(--text-primary);
     }
 
     .badge.bg-primary {
@@ -762,8 +792,26 @@ p {
         border-color: var(--border-color);
     }
 
+    .badge.bg-info {
+        background-color: var(--bg-secondary) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--border-color);
+    }
+
+    .badge.bg-light {
+        background-color: var(--bg-secondary) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--border-color);
+    }
+
+    .badge.bg-dark {
+        background-color: var(--accent-primary) !important;
+        color: var(--accent-secondary) !important;
+        border-color: var(--accent-primary);
+    }
+
 /* ============================================
-   ALERTS - MINIMALIST NOTIFICATIONS
+   ALERTS - PURE MONOCHROME
    ============================================ */
 
 .alert {
@@ -776,22 +824,26 @@ p {
 }
 
 .alert-success {
-    border-color: var(--status-success);
+    border-color: var(--accent-primary);
+    background-color: var(--bg-secondary);
     color: var(--text-primary);
 }
 
 .alert-danger {
-    border-color: var(--status-danger);
+    border-color: var(--text-primary);
+    background-color: var(--bg-secondary);
     color: var(--text-primary);
 }
 
 .alert-warning {
-    border-color: var(--status-warning);
+    border-color: var(--text-tertiary);
+    background-color: var(--bg-secondary);
     color: var(--text-primary);
 }
 
 .alert-info {
-    border-color: var(--status-info);
+    border-color: var(--border-color);
+    background-color: var(--bg-secondary);
     color: var(--text-primary);
 }
 
@@ -812,12 +864,6 @@ p {
     padding: 0.5rem 1rem;
     transition: all var(--transition-fast);
 }
-
-    .page-link:hover {
-        background-color: var(--bg-secondary);
-        border-color: var(--accent-primary);
-        color: var(--text-primary);
-    }
 
 .page-item.active .page-link {
     background-color: var(--accent-primary);
@@ -910,9 +956,22 @@ p {
     transition: all var(--transition-base);
 }
 
-    .hover-lift:hover {
-        transform: translateY(-5px);
-    }
+/* Background opacity variants */
+.bg-opacity-10 {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.bg-opacity-25 {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.bg-opacity-50 {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.bg-opacity-75 {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+}
 
 /* ============================================
    RESPONSIVE UTILITIES
@@ -987,10 +1046,6 @@ p {
     border-radius: var(--radius-pill);
 }
 
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--text-secondary);
-    }
-
 /* ============================================
    PRINT STYLES
    ============================================ */
@@ -1006,5 +1061,59 @@ p {
     .card {
         box-shadow: none !important;
         border: 1px solid #000 !important;
+    }
+}
+
+/* ============================================
+   FORM SELECT DROPDOWN FIXES
+   ============================================ */
+
+.form-select {
+    padding-right: 2.5rem !important;
+    background-position: right 0.75rem center !important;
+    background-size: 16px 12px !important;
+}
+
+.form-select-sm {
+    padding-right: 2rem !important;
+    background-position: right 0.5rem center !important;
+    background-size: 14px 10px !important;
+}
+
+.form-select option {
+    padding: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-body .form-select-sm.fw-bold {
+    font-size: 0.875rem;
+    padding: 0.5rem 2rem 0.5rem 0.75rem !important;
+    min-width: 120px;
+}
+
+.col-auto .form-select {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+[data-theme="dark"] .form-select {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+    [data-theme="dark"] .form-select:focus {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        border-color: var(--accent-primary);
+    }
+
+@media (max-width: 768px) {
+    .form-select-sm {
+        font-size: 0.75rem;
+        padding: 0.375rem 1.75rem 0.375rem 0.5rem !important;
     }
 }

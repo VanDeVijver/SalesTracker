@@ -1,0 +1,286 @@
+﻿@model SalesTracker.Web.ViewModels.ProjectDetailsViewModel
+@{
+    ViewData["Title"] = "Project Details";
+    var statusBadgeClass = Model.Status switch
+    {
+        SalesTracker.Core.Models.ProjectStatus.Pending => "bg-warning text-dark",
+        SalesTracker.Core.Models.ProjectStatus.Won => "bg-success text-white",
+        SalesTracker.Core.Models.ProjectStatus.Lost => "bg-danger text-white",
+        _ => "bg-secondary text-white"
+    };
+}
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="display-5 fw-black text-primary">PROJECT DETAILS</h1>
+            <p class="text-muted mb-0">Complete project information</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary fw-bold">
+                ✏️ Edit
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary fw-bold">
+                ← Back to List
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Left Column -->
+        <div class="col-lg-8">
+            <!-- Basic Information Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0 fw-black">📋 BASIC INFORMATION</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="text-muted small fw-bold text-uppercase">Customer</label>
+                            <p class="fw-black fs-5 text-primary mb-0">@Model.Customer</p>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="text-muted small fw-bold text-uppercase">Date</label>
+                            <p class="fw-bold mb-0">@Model.Date.ToString("dd/MM/yyyy")</p>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="text-muted small fw-bold text-uppercase">Status</label>
+                            <p class="mb-0">
+                                <span class="badge @statusBadgeClass fs-6">@Model.Status</span>
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small fw-bold text-uppercase">Client Type</label>
+                            <p class="fw-bold mb-0">@Model.ClientType</p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small fw-bold text-uppercase">Category</label>
+                            <p class="fw-bold mb-0">
+                                <span class="badge bg-light text-dark border">@Model.CategoryName</span>
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small fw-bold text-uppercase">Lead Channel</label>
+                            <p class="fw-bold channel-style mb-0">@Model.LeadChannelName</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Information Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0 fw-black">💰 FINANCIAL OVERVIEW</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <!-- Quote Section -->
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 bg-light">
+                                <h6 class="fw-black text-primary mb-3">📝 OFFERTE (QUOTE)</h6>
+                                <div class="mb-2">
+                                    <label class="text-muted small">Verkoop (Amount)</label>
+                                    <p class="fw-black fs-4 text-primary mb-0">€@Model.Amount.ToString("N2")</p>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="text-muted small">Inkoop (Purchase)</label>
+                                    <p class="fw-bold mb-0">€@Model.Purchase.ToString("N2")</p>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="text-muted small">Marge</label>
+                                    <p class="fw-bold mb-0">
+                                        @Model.ManualMarginPercentage.ToString("N2")%
+                                        <span class="text-muted">(€@Model.ManualMarginAmount.ToString("N2"))</span>
+                                    </p>
+                                </div>
+                                <div>
+                                    <label class="text-muted small">Begrote Uren</label>
+                                    <p class="fw-bold mb-0">@Model.Hours.ToString("N2") uur</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actual Section -->
+                        <div class="col-md-6">
+                            <div class="border rounded p-3" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
+                                <h6 class="fw-black text-white mb-3">✅ NACALCULATIE (CAFCA)</h6>
+                                @if (Model.CafcaMarginPercentage.HasValue)
+                                {
+                                    <div class="mb-2">
+                                        <label class="text-white-50 small">Werkelijk Gefactureerd</label>
+                                        <p class="fw-black fs-4 text-white mb-0">
+                                            €@((Model.FinalInvoiceAmount ?? Model.Amount).ToString("N2"))
+                                        </p>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="text-white-50 small">Cafca Marge</label>
+                                        <p class="fw-bold text-white mb-0">
+                                            @Model.CafcaMarginPercentage.Value.ToString("N2")%
+                                            @if (Model.CafcaMarginAmount.HasValue)
+                                            {
+                                                <span class="text-white-50">(€@Model.CafcaMarginAmount.Value.ToString("N2"))</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="text-white-50 small">Cafca Uren</label>
+                                        <p class="fw-bold text-white mb-0">
+                                            @(Model.CafcaHours?.ToString("N2") ?? "N/A") uur
+                                        </p>
+                                    </div>
+
+                                    <!-- Variance Analysis -->
+                                    @if (Model.MarginDifference.HasValue)
+                                    {
+                                        <div class="mt-3 pt-3 border-top border-white border-opacity-25">
+                                            <label class="text-white-50 small">Marge Verschil</label>
+                                            <p class="fw-black mb-0" style="color: @(Model.MarginDifference.Value >= 0 ? "#10b981" : "#ef4444")">
+                                                @(Model.MarginDifference.Value >= 0 ? "+" : "")@Model.MarginDifference.Value.ToString("N2")%
+                                            </p>
+                                        </div>
+                                    }
+                                    @if (Model.HoursDifference.HasValue)
+                                    {
+                                        <div class="mt-2">
+                                            <label class="text-white-50 small">Uren Verschil</label>
+                                            <p class="fw-black mb-0" style="color: @(Model.HoursDifference.Value <= 0 ? "#10b981" : "#ef4444")">
+                                                @(Model.HoursDifference.Value >= 0 ? "+" : "")@Model.HoursDifference.Value.ToString("N2") uur
+                                            </p>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="text-white-50 text-center py-4 mb-0">
+                                        <em>Nog geen nacalculatie beschikbaar</em>
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Checklist Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0 fw-black">✓ PROJECT CHECKLIST</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <div class="text-center p-3 border rounded @(Model.CheckCafca ? "bg-success bg-opacity-10 border-success" : "bg-light")">
+                                <div class="fs-1 mb-2">@(Model.CheckCafca ? "✅" : "⬜")</div>
+                                <p class="fw-bold mb-0 small">In CafCa</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="text-center p-3 border rounded @(Model.CheckFolder ? "bg-success bg-opacity-10 border-success" : "bg-light")">
+                                <div class="fs-1 mb-2">@(Model.CheckFolder ? "✅" : "⬜")</div>
+                                <p class="fw-bold mb-0 small">Mapje</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="text-center p-3 border rounded @(Model.CheckMaterial ? "bg-success bg-opacity-10 border-success" : "bg-light")">
+                                <div class="fs-1 mb-2">@(Model.CheckMaterial ? "✅" : "⬜")</div>
+                                <p class="fw-bold mb-0 small">Materiaal</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="text-center p-3 border rounded @(Model.CheckPlanning ? "bg-success bg-opacity-10 border-success" : "bg-light")">
+                                <div class="fs-1 mb-2">@(Model.CheckPlanning ? "✅" : "⬜")</div>
+                                <p class="fw-bold mb-0 small">Planning</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Card -->
+            @if (!string.IsNullOrWhiteSpace(Model.Notes))
+            {
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0 fw-black">📝 NOTES</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0" style="white-space: pre-wrap;">@Model.Notes</p>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-lg-4">
+            <!-- Status Information Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0 fw-black">📊 STATUS INFO</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Status == SalesTracker.Core.Models.ProjectStatus.Won && Model.EndDate.HasValue)
+                    {
+                        <div class="mb-3">
+                            <label class="text-muted small fw-bold text-uppercase">Won Date</label>
+                            <p class="fw-bold text-success mb-0">@Model.EndDate.Value.ToString("dd/MM/yyyy")</p>
+                        </div>
+                        @if (Model.LeadTimeDays.HasValue)
+                        {
+                            <div class="mb-3">
+                                <label class="text-muted small fw-bold text-uppercase">Lead Time</label>
+                                <p class="fw-bold mb-0">@Model.LeadTimeDays.Value dagen</p>
+                            </div>
+                        }
+                    }
+                    @if (Model.Status == SalesTracker.Core.Models.ProjectStatus.Lost && !string.IsNullOrWhiteSpace(Model.LostReason))
+                    {
+                        <div class="mb-3">
+                            <label class="text-muted small fw-bold text-uppercase">Lost Reason</label>
+                            <p class="fw-bold text-danger mb-0">@Model.LostReason</p>
+                        </div>
+                    }
+
+                    <div class="alert alert-light border mb-0">
+                        <small class="text-muted">
+                            <strong>Project ID:</strong> #@Model.Id.ToString("D6")
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Log Card -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0 fw-black">📜 PROJECT LOG</h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.LogEntries.Any())
+                    {
+                        <div class="list-group list-group-flush" style="max-height: 500px; overflow-y: auto;">
+                            @foreach (var entry in Model.LogEntries.OrderByDescending(e => e.Timestamp))
+                            {
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between align-items-start">
+                                        <p class="mb-1 fw-semibold">@entry.Message</p>
+                                    </div>
+                                    <small class="text-muted">
+                                        <span class="fw-bold">@entry.UserName</span> •
+                                        @entry.Timestamp.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                                    </small>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="p-4 text-center text-muted">
+                            <em>Geen log entries beschikbaar</em>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SalesTracker.Core.Entities;
+using SalesTracker.Core.Models;
 
 namespace SalesTracker.Core.Data
 {
@@ -61,6 +63,7 @@ namespace SalesTracker.Core.Data
 
                 entity.Property(e => e.FinalInvoiceAmount)
                     .HasColumnType("decimal(18,2)");
+
 
                 // Relationships - Use the navigation properties from Category and LeadChannel
                 entity.HasOne(e => e.Category)

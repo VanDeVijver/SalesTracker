@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SalesTracker.Core.Data;
@@ -11,9 +12,11 @@ using SalesTracker.Core.Data;
 namespace SalesTracker.Core.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260210212653_AddLogEntriesToProject")]
+    partial class AddLogEntriesToProject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,21 +54,21 @@ namespace SalesTracker.Core.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "f5b9dcde-8ad3-4048-aedc-2bbe4cbe6283",
+                            ConcurrencyStamp = "93dded7a-6601-4ea2-b220-e730f17ffa9b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "5e8e9c7a-39a6-4087-af63-68a9ca821400",
+                            ConcurrencyStamp = "5f49c089-5580-4222-ac57-d144ea6d794f",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
                             Id = "3",
-                            ConcurrencyStamp = "0ae542d0-adfe-4fdf-833a-a6373f4aff67",
+                            ConcurrencyStamp = "f8b79dff-0843-4f07-8fba-df452669ad85",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -382,35 +385,35 @@ namespace SalesTracker.Core.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 2, 10, 21, 39, 58, 673, DateTimeKind.Utc).AddTicks(9703),
+                            CreatedAt = new DateTime(2026, 2, 10, 21, 26, 52, 673, DateTimeKind.Utc).AddTicks(9567),
                             IsActive = true,
                             Name = "Eigen leads"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 2, 10, 21, 39, 58, 673, DateTimeKind.Utc).AddTicks(9707),
+                            CreatedAt = new DateTime(2026, 2, 10, 21, 26, 52, 673, DateTimeKind.Utc).AddTicks(9574),
                             IsActive = true,
                             Name = "Davy"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 2, 10, 21, 39, 58, 673, DateTimeKind.Utc).AddTicks(9708),
+                            CreatedAt = new DateTime(2026, 2, 10, 21, 26, 52, 673, DateTimeKind.Utc).AddTicks(9576),
                             IsActive = true,
                             Name = "SMA"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 2, 10, 21, 39, 58, 673, DateTimeKind.Utc).AddTicks(9709),
+                            CreatedAt = new DateTime(2026, 2, 10, 21, 26, 52, 673, DateTimeKind.Utc).AddTicks(9577),
                             IsActive = true,
                             Name = "SolarWatt"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2026, 2, 10, 21, 39, 58, 673, DateTimeKind.Utc).AddTicks(9710),
+                            CreatedAt = new DateTime(2026, 2, 10, 21, 26, 52, 673, DateTimeKind.Utc).AddTicks(9578),
                             IsActive = true,
                             Name = "Wienerberger"
                         });
@@ -473,6 +476,9 @@ namespace SalesTracker.Core.Migrations
 
                     b.Property<int>("LeadChannelId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("LogEntries")
+                        .HasColumnType("text");
 
                     b.Property<string>("LostReason")
                         .HasMaxLength(100)
@@ -543,7 +549,7 @@ namespace SalesTracker.Core.Migrations
                         {
                             Id = 1,
                             Key = "HourlyRate",
-                            UpdatedAt = new DateTime(2026, 2, 10, 21, 39, 58, 673, DateTimeKind.Utc).AddTicks(9734),
+                            UpdatedAt = new DateTime(2026, 2, 10, 21, 26, 52, 673, DateTimeKind.Utc).AddTicks(9602),
                             Value = "50"
                         });
                 });

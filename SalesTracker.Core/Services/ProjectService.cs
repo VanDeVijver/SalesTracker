@@ -42,6 +42,11 @@ namespace SalesTracker.Core.Services
             {
                 project.EndDate = DateTime.SpecifyKind(project.EndDate.Value, DateTimeKind.Utc);
             }
+            // Ensure LogEntries is initialized
+            if (project.LogEntries == null)
+            {
+                project.LogEntries = new List<Core.Models.ProjectLogEntry>();
+            }
 
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();
@@ -73,6 +78,7 @@ namespace SalesTracker.Core.Services
             existing.Notes = project.Notes;
             existing.LostReason = project.LostReason;
             existing.UpdatedAt = DateTime.UtcNow;
+            existing.EndDate = project.EndDate;
             existing.CheckCafca = project.CheckCafca;
             existing.CheckFolder = project.CheckFolder;
             existing.CheckMaterial = project.CheckMaterial;
@@ -88,14 +94,10 @@ namespace SalesTracker.Core.Services
                 existing.EndDate = null;
             }
 
-            if (project.EndDate.HasValue)
-            {
-                existing.EndDate = DateTime.SpecifyKind(project.EndDate.Value, DateTimeKind.Utc);
-            }
-            else
-            {
-                existing.EndDate = null;
-            }
+            _context.Entry(existing).State = EntityState.Modified;
+
+            // Explicitly mark LogEntries property as modified
+            _context.Entry(existing).Property(p => p.LogEntries).IsModified = true;
 
             await _context.SaveChangesAsync();
 

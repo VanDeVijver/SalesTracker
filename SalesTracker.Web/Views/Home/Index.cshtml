@@ -7,25 +7,25 @@
     <!-- Header with Year/Month/Category Filters -->
     <div class="card shadow-sm mb-4" style="background: linear-gradient(135deg, var(--accent-primary) 0%, #1a1a1a 100%); color: var(--accent-secondary);">
         <div class="card-body">
-            <div class="row align-items-center">
-                <div class="col-md-6">
+            <div class="row align-items-center g-3">
+                <div class="col-md-6 col-lg-5">
                     <h1 class="h3 fw-black mb-0">📊 PROJECTS DASHBOARD</h1>
                     <p class="mb-0 small opacity-75">Real-time project analytics</p>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 col-lg-7">
                     <form asp-action="Index" method="get" class="row g-2 justify-content-end">
-                        <div class="col-auto">
-                            <label class="form-label small fw-bold mb-1">Year</label>
-                            <select name="year" class="form-select form-select-sm fw-bold" onchange="this.form.submit()">
+                        <div class="col-auto" style="min-width: 100px;">
+                            <label class="form-label small fw-bold mb-1 d-block">Year</label>
+                            <select name="year" class="form-select form-select-sm fw-bold" onchange="this.form.submit()" style="width: 100px;">
                                 @for (int y = DateTime.Now.Year; y >= 2020; y--)
                                 {
                                     <option value="@y" selected="@(y == Model.CurrentYear)">@y</option>
                                 }
                             </select>
                         </div>
-                        <div class="col-auto">
-                            <label class="form-label small fw-bold mb-1">Month</label>
-                            <select name="month" class="form-select form-select-sm fw-bold" onchange="this.form.submit()">
+                        <div class="col-auto" style="min-width: 140px;">
+                            <label class="form-label small fw-bold mb-1 d-block">Month</label>
+                            <select name="month" class="form-select form-select-sm fw-bold" onchange="this.form.submit()" style="width: 140px;">
                                 <option value="">Heel jaar</option>
                                 @for (int m = 1; m <= 12; m++)
                                 {
@@ -35,9 +35,9 @@
                                 }
                             </select>
                         </div>
-                        <div class="col-auto">
-                            <label class="form-label small fw-bold mb-1">Category</label>
-                            <select name="category" class="form-select form-select-sm fw-bold" onchange="this.form.submit()">
+                        <div class="col-auto" style="min-width: 160px;">
+                            <label class="form-label small fw-bold mb-1 d-block">Category</label>
+                            <select name="category" class="form-select form-select-sm fw-bold" onchange="this.form.submit()" style="width: 160px;">
                                 <option value="all">Alle Categorieën</option>
                                 @foreach (var cat in Model.Categories)
                                 {
@@ -50,6 +50,8 @@
             </div>
         </div>
     </div>
+
+</div>
 
     <!-- ===== EXISTING: Stats Cards ===== -->
     <div class="row g-4 mb-4">
@@ -88,43 +90,6 @@
                     <h6 class="card-subtitle text-muted text-uppercase fw-bold mb-2">Lost Projects</h6>
                     <h2 class="card-title fw-black text-danger mb-2">@Model.Stats["LostProjects"]</h2>
                     <p class="card-text text-muted small mb-0">€@Model.Stats["LostValue"].ToString("N0")</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== EXISTING: Financial Overview ===== -->
-    <div class="row g-4 mb-4">
-        <div class="col-lg-4">
-            <div class="card bg-primary text-white shadow h-100">
-                <div class="card-body">
-                    <h6 class="card-subtitle text-white-50 text-uppercase fw-bold mb-2">Total Revenue</h6>
-                    <h2 class="card-title fw-black mb-0">€@Model.Stats["TotalRevenue"].ToString("N0")</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="card bg-success text-white shadow h-100">
-                <div class="card-body">
-                    <h6 class="card-subtitle text-white-50 text-uppercase fw-bold mb-2">Total Margin</h6>
-                    <h2 class="card-title fw-black mb-0">€@Model.Stats["TotalMargin"].ToString("N0")</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="card bg-secondary text-white shadow h-100">
-                <div class="card-body">
-                    <h6 class="card-subtitle text-white-50 text-uppercase fw-bold mb-2">Margin %</h6>
-                    <h2 class="card-title fw-black mb-0">
-                        @{
-                            var marginPercent = Model.Stats["TotalRevenue"] > 0
-                                ? (Model.Stats["TotalMargin"] / Model.Stats["TotalRevenue"] * 100)
-                                : 0;
-                        }
-                        @marginPercent.ToString("F1")%
-                    </h2>
                 </div>
             </div>
         </div>

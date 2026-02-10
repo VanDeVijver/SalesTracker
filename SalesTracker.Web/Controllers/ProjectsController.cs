@@ -167,6 +167,8 @@ namespace SalesTracker.Web.Controllers
         // GET: Projects/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
+
+     
             var project = await _projectService.GetProjectByIdAsync(id);
             if (project == null)
                 return NotFound();
@@ -319,6 +321,42 @@ namespace SalesTracker.Web.Controllers
 
             ViewBag.Categories = new SelectList(categories, "Id", "Name");
             ViewBag.LeadChannels = new SelectList(leadChannels, "Id", "Name");
+        }
+
+        // GET: Projects/Details/5
+        public async Task<IActionResult> Details(int id)
+        {
+            var project = await _projectService.GetProjectByIdAsync(id);
+            if (project == null)
+                return NotFound();
+
+            var model = new ProjectDetailsViewModel
+            {
+                Id = project.Id,
+                Date = project.Date,
+                Customer = project.Customer,
+                ClientType = project.ClientType,
+                CategoryName = project.Category.Name,
+                LeadChannelName = project.LeadChannel.Name,
+                Status = project.Status,
+                Amount = project.Amount,
+                Purchase = project.Purchase,
+                ManualMarginPercentage = project.ManualMarginPercentage,
+                Hours = project.Hours,
+                CafcaMarginPercentage = project.CafcaMarginPercentage,
+                CafcaHours = project.CafcaHours,
+                FinalInvoiceAmount = project.FinalInvoiceAmount,
+                EndDate = project.EndDate,
+                LostReason = project.LostReason,
+                Notes = project.Notes,
+                CheckCafca = project.CheckCafca,
+                CheckFolder = project.CheckFolder,
+                CheckMaterial = project.CheckMaterial,
+                CheckPlanning = project.CheckPlanning,
+                LogEntries = project.LogEntries ?? new List<ProjectLogEntry>()
+            };
+
+            return View(model);
         }
     }
 }
