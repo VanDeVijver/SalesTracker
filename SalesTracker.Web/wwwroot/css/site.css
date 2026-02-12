@@ -478,24 +478,149 @@ p {
         border-color: rgba(255, 255, 255, 0.1);
     }
 
-/* Override colored card headers */
-.card-header.bg-success,
-.card-header.bg-warning,
-.card-header.bg-danger,
-.card-header.bg-info {
-    background-color: var(--accent-primary) !important;
-    color: var(--accent-secondary) !important;
-    border-bottom: 2px solid var(--accent-primary);
-}
-
 .card-header.bg-secondary {
     background-color: var(--bg-tertiary) !important;
     color: var(--text-primary) !important;
     border-bottom: 2px solid var(--border-color);
 }
+.card-header.bg-primary,
+.card-header.bg-success,
+.card-header.bg-warning,
+.card-header.bg-danger,
+.card-header.bg-info,
+.card-header.bg-secondary,
+.card-header.bg-dark {
+    background-color: var(--accent-primary) !important;
+    color: var(--accent-secondary) !important;
+    border-bottom: 2px solid var(--accent-primary) !important;
+}
+
+    /* Ensure text and icons are visible */
+    .card-header.bg-primary h5,
+    .card-header.bg-success h5,
+    .card-header.bg-warning h5,
+    .card-header.bg-danger h5,
+    .card-header.bg-info h5,
+    .card-header.bg-secondary h5,
+    .card-header.bg-dark h5 {
+        color: var(--accent-secondary) !important;
+    }
+
+/* Warning card header special case (if you want it different) */
+.card-header.bg-warning {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+    border-bottom: 2px solid var(--border-color) !important;
+}
+
+    .card-header.bg-warning h5 {
+        color: var(--text-primary) !important;
+    }
+
+/* Fix gradient background in CAFCA section */
+.card-body [style*="linear-gradient"] {
+    background: var(--accent-primary) !important;
+    color: var(--accent-secondary) !important;
+}
 
 /* ============================================
-   NAVIGATION - MINIMALIST NAVBAR
+   CAFCA SECTION - THEME-AWARE STYLING
+   ============================================ */
+
+/* CAFCA Container */
+.cafca-section {
+    background-color: var(--accent-primary);
+    color: var(--accent-secondary);
+    border: 2px solid var(--accent-primary) !important;
+    transition: all var(--transition-base);
+}
+
+/* CAFCA Title */
+.cafca-title {
+    color: var(--accent-secondary) !important;
+}
+
+/* CAFCA Labels */
+.cafca-label {
+    color: var(--accent-secondary);
+    opacity: 0.7;
+}
+
+.cafca-label-secondary {
+    color: var(--accent-secondary);
+    opacity: 0.6;
+}
+
+/* CAFCA Values */
+.cafca-value {
+    color: var(--accent-secondary) !important;
+}
+
+/* CAFCA Border Top */
+.cafca-border-top {
+    border-top: 1px solid var(--accent-secondary);
+    opacity: 0.3;
+}
+
+/* CAFCA Empty State */
+.cafca-empty {
+    color: var(--accent-secondary);
+    opacity: 0.6;
+}
+
+/* Variance Colors - Monochrome */
+.variance-positive {
+    color: var(--accent-secondary) !important;
+    font-weight: var(--font-weight-black);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+}
+
+.variance-negative {
+    color: var(--accent-secondary) !important;
+    font-weight: var(--font-weight-black);
+    font-style: italic;
+}
+
+/* Dark Theme Adjustments */
+[data-theme="dark"] .cafca-section {
+    background-color: var(--accent-primary);
+    border-color: var(--accent-primary) !important;
+}
+
+[data-theme="dark"] .cafca-title,
+[data-theme="dark"] .cafca-value {
+    color: var(--accent-secondary) !important;
+}
+
+[data-theme="dark"] .cafca-label,
+[data-theme="dark"] .cafca-label-secondary,
+[data-theme="dark"] .cafca-empty {
+    color: var(--accent-secondary);
+}
+
+/* Light Theme Adjustments */
+[data-theme="light"] .cafca-section {
+    background-color: var(--accent-primary);
+    border-color: var(--accent-primary) !important;
+}
+
+[data-theme="light"] .cafca-title,
+[data-theme="light"] .cafca-value {
+    color: var(--accent-secondary) !important;
+}
+
+[data-theme="light"] .cafca-label,
+[data-theme="light"] .cafca-label-secondary,
+[data-theme="light"] .cafca-empty {
+    color: var(--accent-secondary);
+}
+
+
+
+/* ============================================
+   NAVIGATION - MINIMALIST NAVBAR 
    ============================================ */
 
 .navbar {
@@ -656,6 +781,7 @@ p {
             border-bottom: none;
         }
 
+
 /* Table Variants */
 .table-dark thead th {
     background-color: var(--accent-primary);
@@ -665,6 +791,53 @@ p {
 
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: var(--bg-secondary);
+}
+
+
+/* ============================================
+   TABLE HEADER VISIBILITY FIXES
+   ============================================ */
+
+/* Financial Analysis Tables - Light background headers */
+.table-light thead th,
+.table thead.table-light th {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    font-weight: var(--font-weight-bold);
+    border-bottom: 2px solid var(--border-color);
+}
+
+/* Override for tables inside colored card sections */
+.card-header.bg-danger ~ .card-body .table thead th,
+.card-header.bg-success ~ .card-body .table thead th,
+.border-danger .table thead th,
+.border-success .table thead th {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Ensure text colors in financial tables are visible */
+.table tbody td.text-danger {
+    color: var(--text-primary) !important;
+    font-weight: var(--font-weight-bold);
+}
+
+.table tbody td.text-success {
+    color: var(--text-primary) !important;
+    font-weight: var(--font-weight-bold);
+}
+
+/* Card header text visibility */
+.card-header.bg-danger h5,
+.card-header.bg-success h5 {
+    color: var(--text-primary) !important;
+}
+
+/* Opacity backgrounds should still show text */
+.bg-danger.bg-opacity-10,
+.bg-success.bg-opacity-10 {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
 }
 
 /* Custom Table Styles */

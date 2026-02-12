@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using SalesTracker.Core.Entities;
 using SalesTracker.Core.Interfaces;
 using SalesTracker.Core.Models;
 using SalesTracker.Web.Models;
@@ -32,22 +34,33 @@ namespace SalesTracker.Web.Controllers
             _categoryTargetService = categoryTargetService;
         }
 
-        public async Task<IActionResult> Index(int? year, int? month, string? category)
+        public async Task<IActionResult> Index(int? year, int? month, int? categoryId)
         {
             var currentYear = year ?? DateTime.Now.Year;
-            var categoryFilter = category ?? "all";
 
             // Get all projects for the year
             var allProjects = await _projectService.GetProjectsByYearAsync(currentYear);
 
-            // Apply filters
+            // Apply month filter
+            if (month.HasValue && month.Value >= 1 && month.Value <= 12)
+            {
+                allProjects = allProjects.Where(p => p.Date.Month == month.Value).ToList();
+            }
+
+            // Apply category filter
+            if (categoryId.HasValue)
+            {
+                allProjects = allProjects.Where(p => p.CategoryId == categoryId.Value).ToList();
+            }
+
+            // Apply filters for chart data
             var filteredProjects = allProjects.Where(p =>
             {
                 var projectDate = p.Status == ProjectStatus.Won ? p.EndDate : p.Date;
                 if (!projectDate.HasValue) projectDate = p.Date;
 
                 var matchesMonth = !month.HasValue || projectDate.Value.Month == month.Value;
-                var matchesCategory = categoryFilter == "all" || p.Category.Name == categoryFilter;
+                var matchesCategory = !categoryId.HasValue || p.CategoryId == categoryId.Value;
 
                 return matchesMonth && matchesCategory;
             }).ToList();
@@ -56,33 +69,54 @@ namespace SalesTracker.Web.Controllers
             var pendingProjects = filteredProjects.Where(p => p.Status == ProjectStatus.Pending).ToList();
             var lostProjects = filteredProjects.Where(p => p.Status == ProjectStatus.Lost).ToList();
 
-            // Get categories
+            // Get categories for dropdown
             var categories = await _categoryService.GetAllCategoriesAsync();
-            var categoryNames = categories.Select(c => c.Name).ToList();
+            var categoryList = categories.ToList();
 
-            var activeCategories = categoryFilter == "all"
-                ? categoryNames
-                : new List<string> { categoryFilter };
+            // Determine active categories for charts
+            var activeCategories = categoryId.HasValue
+                ? categoryList.Where(c => c.Id == categoryId.Value).Select(c => c.Name).ToList()
+                : categoryList.Select(c => c.Name).ToList();
+
+            // Get category name for display
+            var selectedCategoryName = categoryId.HasValue
+                ? categoryList.FirstOrDefault(c => c.Id == categoryId.Value)?.Name
+                : "all";
 
             // Get targets
             var yearlyTargets = (await _categoryTargetService.GetTargetsByYearAsync(currentYear)).ToList();
             var yearlyTargetTotal = yearlyTargets.Sum(t => t.TargetAmount);
             var targetDivisor = month.HasValue ? 12m : 1m;
-            var activeTarget = categoryFilter == "all"
-                ? yearlyTargetTotal / targetDivisor
-                : (yearlyTargets.FirstOrDefault(t => t.Category.Name == categoryFilter)?.TargetAmount ?? 0) / targetDivisor;
 
-            // Calculate stats (existing functionality)
-            var stats = await _projectService.GetDashboardStatsAsync(currentYear);
+            var activeTarget = categoryId.HasValue
+                ? (yearlyTargets.FirstOrDefault(t => t.CategoryId == categoryId.Value)?.TargetAmount ?? 0) / targetDivisor
+                : yearlyTargetTotal / targetDivisor;
+
+            // Calculate stats
+            var stats = new Dictionary<string, decimal>
+            {
+                ["TotalProjects"] = filteredProjects.Count,
+                ["PendingProjects"] = pendingProjects.Count,
+                ["WonProjects"] = wonProjects.Count,
+                ["LostProjects"] = lostProjects.Count,
+                ["TotalRevenue"] = wonProjects.Sum(p => p.FinalInvoiceAmount ?? p.Amount),
+                ["TotalPurchase"] = wonProjects.Sum(p => p.Purchase),
+                ["TotalMargin"] = wonProjects.Sum(p => p.CafcaMarginAmount ?? p.ManualMarginAmount),
+                ["PendingValue"] = pendingProjects.Sum(p => p.Amount),
+                ["WonValue"] = wonProjects.Sum(p => p.FinalInvoiceAmount ?? p.Amount),
+                ["LostValue"] = lostProjects.Sum(p => p.Amount)
+            };
 
             // Build ViewModel
             var model = new DashboardViewModel
             {
                 CurrentYear = currentYear,
                 Month = month,
-                CategoryFilter = categoryFilter,
+                CategoryId = categoryId,
+                CategoryFilter = selectedCategoryName,
                 Stats = stats,
-                Categories = categoryNames,
+                Categories = categoryList.Select(c => c.Name).ToList(),
+                CategoriesSelectList = new SelectList(categoryList, "Id", "Name", categoryId),
 
                 // KPIs
                 TotalWonRevenue = wonProjects.Sum(p => p.FinalInvoiceAmount ?? p.Amount),
@@ -102,8 +136,8 @@ namespace SalesTracker.Web.Controllers
                     ? Math.Round((wonProjects.Sum(p => p.FinalInvoiceAmount ?? p.Amount) / activeTarget) * 100, 2)
                     : 0,
 
-                // Recent Projects (existing)
-                RecentProjects = allProjects
+                // Recent Projects
+                RecentProjects = filteredProjects
                     .OrderByDescending(p => p.Date)
                     .Take(10)
                     .Select(p => new ProjectViewModel
@@ -117,13 +151,13 @@ namespace SalesTracker.Web.Controllers
                         Amount = p.Amount
                     }).ToList(),
 
-                // Category Breakdown (existing)
-                CategoryBreakdown = allProjects
+                // Category Breakdown
+                CategoryBreakdown = filteredProjects
                     .GroupBy(p => p.Category.Name)
                     .ToDictionary(g => g.Key, g => g.Sum(p => p.Amount)),
 
-                // Status Breakdown (existing)
-                StatusBreakdown = allProjects
+                // Status Breakdown
+                StatusBreakdown = filteredProjects
                     .GroupBy(p => p.Status)
                     .ToDictionary(g => g.Key.ToString(), g => g.Count()),
 
