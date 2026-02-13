@@ -77,7 +77,7 @@
 
     <!-- ===== EXISTING: Stats Cards ===== -->
     <div class="row g-4 mb-4">
-        <div class="col-md-6 col-lg-3">
+        <div class="col-md-6 col-lg">
             <div class="card border-primary border-start border-4 shadow-sm h-100">
                 <div class="card-body">
                     <h6 class="card-subtitle text-muted text-uppercase fw-bold mb-2">Total Projects</h6>
@@ -119,16 +119,17 @@
 
     <!-- ===== NEW: Additional KPI Cards ===== -->
     <div class="row g-4 mb-4">
-        <div class="col-md-6 col-xl-3">
-            <div class="card shadow-sm border-0 border-bottom border-info border-4">
+        <div class="col-md-6 col-xl">
+            <div class="card shadow-sm border-0 border-bottom border-info border-4 h-100">
                 <div class="card-body">
                     <h6 class="text-uppercase text-muted fw-bold small mb-2">Omzet (Won)</h6>
                     <h2 class="fw-black text-info mb-0">€@Model.TotalWonRevenue.ToString("N0")</h2>
                 </div>
             </div>
         </div>
-        <div class="col-md-6 col-xl-3">
-            <div class="card shadow-sm border-0 border-bottom border-warning border-4">
+
+        <div class="col-md-6 col-xl">
+            <div class="card shadow-sm border-0 border-bottom border-warning border-4 h-100">
                 <div class="card-body">
                     <h6 class="text-uppercase text-muted fw-bold small mb-2">Target %</h6>
                     <h2 class="fw-black text-warning mb-0">
@@ -138,19 +139,40 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6 col-xl-3">
-            <div class="card shadow-sm border-0 border-bottom border-primary border-4">
+
+        <div class="col-md-6 col-xl">
+            <div class="card shadow-sm border-0 border-bottom border-primary border-4 h-100">
                 <div class="card-body">
                     <h6 class="text-uppercase text-muted fw-bold small mb-2">Pipeline (Pend.)</h6>
                     <h2 class="fw-black text-primary mb-0">€@Model.TotalPipelineValue.ToString("N0")</h2>
                 </div>
             </div>
         </div>
-        <div class="col-md-6 col-xl-3">
-            <div class="card shadow-sm border-0 border-bottom border-danger border-4">
+
+        <div class="col-md-6 col-xl">
+            <div class="card shadow-sm border-0 border-bottom border-danger border-4 h-100">
                 <div class="card-body">
                     <h6 class="text-uppercase text-muted fw-bold small mb-2">Gem. Marge</h6>
                     <h2 class="fw-black text-danger mb-0">@Model.AverageMargin.ToString("N1")%</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl">
+            <div class="card shadow-sm border-0 border-bottom border-secondary border-4 h-100">
+                <div class="card-body">
+                    <h6 class="text-uppercase text-muted fw-bold small mb-2">Gem. Doorlooptijd</h6>
+                    <h2 class="fw-black text-secondary mb-0">
+                        @if (Model.AverageLeadTime > 0)
+                        {
+                            <span>@Model.AverageLeadTime.ToString("N0")</span>
+                            <small class="text-muted fs-6">dagen</small>
+                        }
+                        else
+                        {
+                            <span class="text-muted">N/A</span>
+                        }
+                    </h2>
                 </div>
             </div>
         </div>
